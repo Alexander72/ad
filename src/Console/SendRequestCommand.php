@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendRequestCommand extends Command
 {
-    const REQUESTS_PER_SECOND = 3;
+    const REQUESTS_PER_SECOND = 10;
     const DURATION_IN_SECONDS = 300;
     const REPORT_TIME = 5;
 
@@ -53,7 +53,15 @@ class SendRequestCommand extends Command
             if($sendedRequestCount < self::REQUESTS_PER_SECOND)
             {
                 $output->write('Try send..  ');
-                $output->writeln(isset($this->getAd($url)['items']) ? 'Ok '.microtime(1) : 'Error');
+                if(isset($this->getAd($url)['items']))
+                {
+                    $output->writeln('Ok ' . microtime(1));
+                }
+                else
+                {
+                    $output->writeln('Error ' . microtime(1));
+                    break;
+                }
                 $sendedRequestCount++;
             }
 
