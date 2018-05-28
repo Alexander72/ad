@@ -14,8 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendRequestCommand extends Command
 {
-    const REQUESTS_PER_SECOND = 10;
-    const DURATION_IN_SECONDS = 300;
+    const REQUESTS_PER_SECOND = 1;
+    const DURATION_IN_SECONDS = 10;
     const REPORT_TIME = 5;
 
     const REQUEST_DURATION = 25;

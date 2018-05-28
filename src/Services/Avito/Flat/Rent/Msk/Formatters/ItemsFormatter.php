@@ -12,9 +12,32 @@ use App\Interfaces\Formatters\FormatterInterface;
 
 class ItemsFormatter implements FormatterInterface
 {
+    /**
+     * @param string $flats
+     * @return array
+     * @throws \Exception
+     */
 	public function format(string $flats): array
 	{
-		/** @TODO refactor */
-		return json_decode($flats, 1);
+		$flats = json_decode($flats, 1);
+		if(!isset($flats['coords']))
+        {
+            /** @TODO create specific exception type */
+            throw new \Exception("Avito api format has changed. The 'coords' key does not exists. Presented keys: ".implode(', ', array_keys($flats)));
+        }
+
+        $flats = $flats['coords'];
+
+        $formattedFlats = [];
+        foreach($flats as $flatId => $flat)
+        {
+            $formattedFlats[$flatId] = [
+                'id' => $flatId,
+                'lat' => $flat['lat'],
+                'lon' => $flat['lon'],
+            ];
+        }
+
+		return $formattedFlats;
 	}
 }

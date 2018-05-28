@@ -54,11 +54,14 @@ class AvitoFlatMskRentInit extends Command
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$flats = $this->flatsLoader->load();
-		$output->writeln(print_r($flats, 1));
-		/*foreach($flats as $flat)
+		$i = 0;
+
+		foreach($flats as $flat)
 		{
-			$flat = $this->flatLoader->load($flat);
-			$flat = new Flat($flat);
-		}*/
+		    if($i++ > 20) break;
+            $flat = $this->flatLoader->load($flat);
+            $output->writeln(print_r($flat, 1));
+            //$flat = new Flat($flat);
+		}
 	}
 }

@@ -46,7 +46,7 @@ class ItemsLoader extends AbstractLoader
 
 	protected function getFormatter(): FormatterInterface
 	{
-		return new ItemsFormatter();
+		return $this->itemsFormatter;
 	}
 
 
