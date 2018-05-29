@@ -56,6 +56,15 @@
     "doctrine/orm": {
         "version": "v2.6.1"
     },
+    "elasticsearch/elasticsearch": {
+        "version": "v6.0.1"
+    },
+    "guzzlehttp/ringphp": {
+        "version": "1.1.0"
+    },
+    "guzzlehttp/streams": {
+        "version": "3.0.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -79,6 +88,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "react/promise": {
+        "version": "v2.5.1"
     },
     "symfony/cache": {
         "version": "v4.0.10"
