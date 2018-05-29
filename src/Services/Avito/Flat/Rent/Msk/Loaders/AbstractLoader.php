@@ -37,7 +37,7 @@ abstract class AbstractLoader
 	{
 		$url = $this->getUrl($params);
 		$response = $this->send($url);
-		return $this->getFormatter()->format($response);
+		return $this->getFormatter()->format($response, ['item' => $params]);
 	}
 
 	abstract protected function getUrl(array $params): string;

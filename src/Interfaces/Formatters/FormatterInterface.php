@@ -16,5 +16,5 @@ interface FormatterInterface
 	 * @param string $input
 	 * @return array
 	 */
-	public function format(string $input): array;
+	public function format(string $input, $params = []): array;
 }

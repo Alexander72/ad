@@ -17,7 +17,7 @@ class ItemsFormatter implements FormatterInterface
      * @return array
      * @throws \Exception
      */
-	public function format(string $flats): array
+	public function format(string $flats, $params = []): array
 	{
 		$flats = json_decode($flats, 1);
 		if(!isset($flats['coords']))

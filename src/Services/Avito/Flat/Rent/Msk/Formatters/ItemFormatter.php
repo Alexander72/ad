@@ -12,13 +12,16 @@ use App\Interfaces\Formatters\FormatterInterface;
 
 class ItemFormatter implements FormatterInterface
 {
-	public function format(string $flat): array
+	public function format(string $flat, $params = []): array
 	{
         $flats = json_decode($flat, 1);
         $flat = $this->getArrayValue($flats, 'items');
         $flat = reset($flat);
 
 	    $result = [
+	        'id'          => $this->getArrayValue($params, ['item', 'id']),
+	        'lan'         => $this->getArrayValue($params, ['item', 'lat']),
+	        'lon'         => $this->getArrayValue($params, ['item', 'lon']),
 	        'title'       => $this->getArrayValue($flat, 'title'),
             'url'         => $this->getArrayValue($flat, 'url'),
             'price'       => $this->getArrayValue($flat, 'price'),
