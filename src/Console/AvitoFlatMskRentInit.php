@@ -61,7 +61,7 @@ class AvitoFlatMskRentInit extends Command
 		    if($i++ > 20) break;
             $flat = $this->flatLoader->load($flat);
             $output->writeln(print_r($flat, 1));
-            //$flat = new Flat($flat);
+            $flat = new Flat($flat);
 		}
 	}
 }

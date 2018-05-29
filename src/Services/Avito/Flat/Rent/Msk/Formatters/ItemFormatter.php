@@ -19,19 +19,19 @@ class ItemFormatter implements FormatterInterface
         $flat = reset($flat);
 
 	    $result = [
-	        'title'        => $this->getArrayValue($flat, 'title'),
-            'url'          => $this->getArrayValue($flat, 'url'),
-            'price'        => $this->getArrayValue($flat, 'price'),
-            'type'         => $this->getArrayValue($flat, 'type'),
-            'address'      => $this->getArrayValue($flat, ['ext', 'address']),
-            'floor'        => $this->getArrayValue($flat, ['ext', 'floor']),
-            'floors_count' => $this->getArrayValue($flat, ['ext', 'floors_count']),
-            'house_type'   => $this->getArrayValue($flat, ['ext', 'house_type']),
-            'rooms'        => $this->getArrayValue($flat, ['ext', 'rooms']),
-            'area'         => $this->getArrayValue($flat, ['ext', 'area']),
-            'area_kitchen' => $this->getArrayValue($flat, ['ext', 'area_kitchen']),
-            'area_live'    => $this->getArrayValue($flat, ['ext', 'area_live']),
-            'data'         => $flat,
+	        'title'       => $this->getArrayValue($flat, 'title'),
+            'url'         => $this->getArrayValue($flat, 'url'),
+            'price'       => $this->getArrayValue($flat, 'price'),
+            'type'        => $this->getArrayValue($flat, 'type'),
+            'address'     => $this->getArrayValue($flat, ['ext', 'address']),
+            'floor'       => $this->getArrayValue($flat, ['ext', 'floor']),
+            'floorsTotal' => $this->getArrayValue($flat, ['ext', 'floors_count']),
+            'houseType'   => $this->getArrayValue($flat, ['ext', 'house_type']),
+            'rooms'       => $this->getArrayValue($flat, ['ext', 'rooms']),
+            'area'        => $this->getArrayValue($flat, ['ext', 'area']),
+            'areaKitchen' => $this->getArrayValue($flat, ['ext', 'area_kitchen']),
+            'areaLive'    => $this->getArrayValue($flat, ['ext', 'area_live']),
+            'data'        => $flat,
         ];
         return $result;
 	}
