@@ -35,8 +35,19 @@ class TestElastic extends Command
 		$params = [
 			'index' => 'my_index',
 			'type' => 'my_type',
-			'id' => 'my_id_new',
-			'body' => ['testFieldNew' => 'foo']
+			'id' => 34234234,
+			'body' => [
+				'testFieldNew' => 'foo',
+				'complex_data' => [
+					'lat' => 56.234232423,
+					'lon' => 34.234232423,
+					'title' => 'Hello World!',
+					'floor' => [
+						'id' => 3,
+						'name' => 'three',
+					]
+				],
+			],
 		];
 
 		$response = $client->index($params);
