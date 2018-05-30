@@ -197,4 +197,6 @@ abstract class AbstractAd
         $this->url = $url;
         return $this;
     }
+
+    abstract public static function getEsType();
 }
