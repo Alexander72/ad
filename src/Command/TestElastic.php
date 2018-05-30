@@ -6,7 +6,7 @@
  * Time: 0:50
  */
 
-namespace App\Console;
+namespace App\Command;
 
 
 use Elasticsearch\ClientBuilder;

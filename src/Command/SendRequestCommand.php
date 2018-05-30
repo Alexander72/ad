@@ -6,7 +6,7 @@
  * Time: 19:14
  */
 
-namespace App\Console;
+namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

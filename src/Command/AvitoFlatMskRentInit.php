@@ -6,7 +6,7 @@
  * Time: 14:52
  */
 
-namespace App\Console;
+namespace App\Command;
 
 
 use App\Entity\Ads\Flats\Flat;
