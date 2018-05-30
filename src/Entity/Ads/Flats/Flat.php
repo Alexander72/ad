@@ -8,6 +8,13 @@
 
 namespace App\Entity\Ads\Flats;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Class Flat
+ * @ORM\Entity
+ * @ORM\Table(name="flat")
+ */
 class Flat extends AbstractFlatAd
 {
 }

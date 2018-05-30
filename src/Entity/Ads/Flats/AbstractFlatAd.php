@@ -13,26 +13,23 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class AbstractFlatAd
- * @package App\Entity\Ads\Flats
- * @ORM\Entity
- * @ORM\Table(name="flat")
  */
 abstract class AbstractFlatAd extends AbstractAd
 {
     const ES_TYPE = "Flat";
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $roomCount;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $floor;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $floorCount;
 
@@ -42,7 +39,7 @@ abstract class AbstractFlatAd extends AbstractAd
     protected $address;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $houseType;
 
@@ -52,12 +49,12 @@ abstract class AbstractFlatAd extends AbstractAd
     protected $area;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $areaKitchen;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $areaLive;
 

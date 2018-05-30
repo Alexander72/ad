@@ -40,12 +40,12 @@ abstract class AbstractAd
     protected $site;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Region")
      */
     protected $region;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     protected $data;
 
