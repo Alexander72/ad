@@ -6,9 +6,9 @@
  * Time: 17:23
  */
 
-namespace App\Entity\Flats;
+namespace App\Entity\Ads\Flats;
 
-use App\Entity\AbstractAd;
+use App\Entity\Ads\AbstractAd;
 use Doctrine\ORM\Mapping as ORM;
 
 abstract class AbstractFlatAd extends AbstractAd

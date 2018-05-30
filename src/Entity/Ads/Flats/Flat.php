@@ -6,9 +6,7 @@
  * Time: 15:56
  */
 
-namespace App\Entity\Flats;
-
-use App\Entity\AbstractAd;
+namespace App\Entity\Ads\Flats;
 
 class Flat extends AbstractFlatAd
 {

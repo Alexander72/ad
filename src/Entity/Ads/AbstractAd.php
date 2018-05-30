@@ -6,7 +6,7 @@
  * Time: 13:12
  */
 
-namespace App\Entity;
+namespace App\Entity\Ads;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -53,6 +53,24 @@ abstract class AbstractAd
      * @ORM\Column(type="string", length=255)
      */
     protected $url;
+
+
+    /**
+     * AbstractAd constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        foreach ($data as $field => $value)
+        {
+            $method = 'set' . ucfirst($field);
+            if(method_exists($this, $method))
+            {
+                $this->$method($value);
+            }
+        }
+    }
+
 
     /**
      * @return mixed
@@ -199,4 +217,20 @@ abstract class AbstractAd
     }
 
     abstract public static function getEsType();
+
+    public function toArray(): array
+    {
+        $result = [];
+
+        foreach($this as $field => $value)
+        {
+            /** @TODO make refactoring. Maybe you should use new method and Exception for fields that shouldn't be in result array? */
+            $method = 'get' . ucfirst($field);
+            if(method_exists($this, $method)) {
+                $result[$field] = $this->$method();
+            }
+        }
+
+        return $result;
+    }
 }

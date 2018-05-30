@@ -8,8 +8,8 @@
 
 namespace App\Console;
 
-use App\Entity\Flats\Flat;
 
+use App\Entity\Ads\Flats\Flat;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Items\ItemsLoader;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Item\ItemLoader;
 
@@ -58,10 +58,10 @@ class AvitoFlatMskRentInit extends Command
 
 		foreach($flats as $flat)
 		{
-		    if($i++ > 20) break;
+		    if($i++ > 1) break;
             $flat = $this->flatLoader->load($flat);
-            $output->writeln(print_r($flat, 1));
             $flat = new Flat($flat);
+            $output->writeln(print_r($flat->toArray(), 1));
 		}
 	}
 }
