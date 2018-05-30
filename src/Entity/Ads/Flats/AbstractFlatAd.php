@@ -11,6 +11,12 @@ namespace App\Entity\Ads\Flats;
 use App\Entity\Ads\AbstractAd;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Class AbstractFlatAd
+ * @package App\Entity\Ads\Flats
+ * @ORM\Entity
+ * @ORM\Table(name="flat")
+ */
 abstract class AbstractFlatAd extends AbstractAd
 {
     const ES_TYPE = "Flat";
