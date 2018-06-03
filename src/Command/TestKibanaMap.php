@@ -6,7 +6,7 @@
  * Time: 0:25
  */
 
-namespace App\Console;
+namespace App\Command;
 
 use Elasticsearch\ClientBuilder;
 use Symfony\Component\Console\Command\Command;
