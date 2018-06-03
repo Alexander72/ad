@@ -6,7 +6,7 @@
  * Time: 18:09
  */
 
-namespace App\Console;
+namespace App\Command;
 
 use App\Entity\Region;
 use Doctrine\ORM\EntityManager;

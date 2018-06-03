@@ -25,3 +25,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    app.entity.ads.adrepository:
+      class: \App\Entity\Ads\AdRepository
+      arguments: ['@doctrine.orm.entity_manager']
+
+    App\Command\TestEntitySaveCommand:
+        arguments: ['','@app.entity.ads.adrepository']
