@@ -28,18 +28,19 @@ class TestKibanaMap extends Command
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		// kibana wms url: https://a.tile.openstreetmap.org/{z}/{x}/{y}.png
-		//$client = ClientBuilder::create()->build();
+		$client = ClientBuilder::create()->build();
 
-		for($i = 0; $i < 10; $i++)
+		for($i = 0; $i < 1000; $i++)
 		{
 			list($lat, $lon) = $this->generatePoint();
 
 			$coords = [$lon, $lat];
 			$area = rand(13, 119);
-			$unitCost = rand(80000, 150000) + $this->getCorrelation($lat, $lon) * 200000;
+            $correlation = $this->getCorrelation($lon, $lat);
+            $unitCost = rand(80000, 110000) + $correlation * 100000;
 			$cost = $area * $unitCost;
 			$params = [
-				'index' => 'testMap',
+				'index' => 'test_map',
 				'type' => 'flats',
 				'id' => $i,
 				'body' => [
@@ -48,10 +49,13 @@ class TestKibanaMap extends Command
 					'cost' => $cost,
 					'unitCost' => $unitCost,
 					'area' => $area,
+                    'correlation' => $correlation,
 				],
 			];
 
-			//$response = $client->index($params);
+
+
+			$response = $client->index($params);
 			$output->writeln(print_r($params['body'], 1));
 		}
 	}
@@ -66,12 +70,20 @@ class TestKibanaMap extends Command
 
 	protected function getCorrelation($x, $y)
 	{
-		$widthDistance = self::RIGHT - self::LEFT;
-		$heightDistance = self::UP - self::DOWN;
+        $widthDistance = self::RIGHT - self::LEFT;
+        $heightDistance = self::UP - self::DOWN;
 
-		$result = 1 - abs($x - (self::LEFT + $widthDistance / 2)) / (self::LEFT + $widthDistance / 2);
-		$result += 1 - abs($y - (self::UP + $heightDistance / 2)) / (self::UP + $heightDistance / 2);
+	    $centerX = $widthDistance / 2 + self::LEFT;
+	    $centerY = $heightDistance / 2 + self::DOWN;
 
-		return $result;
+	    $distance = $this->distance($x, $y, $centerX, $centerY);
+	    $correlation = 1 - max(0, min(1, $distance / ($widthDistance / 2)));
+
+	    return $correlation;
+	}
+
+    private function distance($x1, $y1, $x2, $y2)
+    {
+        return sqrt(($x1 - $x2) ** 2 + ($y1 - $y2) ** 2);
 	}
 }
