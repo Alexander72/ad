@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class AbstractFlatAd extends AbstractAd
 {
-    const ES_TYPE = "Flat";
+    const ES_TYPE = "flat";
 
     /**
      * @ORM\Column(type="integer", nullable=true)

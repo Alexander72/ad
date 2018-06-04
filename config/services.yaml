@@ -32,3 +32,6 @@ services:
 
     App\Command\TestEntitySaveCommand:
         arguments: ['','@app.entity.ads.adrepository']
+
+    App\Command\AvitoFlatMskRentInit:
+        arguments: ['', '','@app.entity.ads.adrepository']
