@@ -8,13 +8,9 @@
 
 namespace App\Command;
 
-
 use App\Entity\Ads\Flats\Flat;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Items\ItemsLoader;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Item\ItemLoader;
-
-use App\Services\Avito\Flat\Rent\Msk\Formatters\ItemsFormatter;
-use App\Services\Avito\Flat\Rent\Msk\Formatters\ItemFormatter;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,33 +18,37 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AvitoFlatMskRentInit extends Command
 {
+    /**
+     * @var ItemsLoader
+     */
 	protected $flatsLoader;
 
+    /**
+     * @var ItemLoader
+     */
 	protected $flatLoader;
 
-	protected $flatsFormatter;
-
-	protected $flatFormatter;
-
+    /**
+     * AvitoFlatMskRentInit constructor.
+     * @param ItemsLoader $flatsLoader
+     * @param ItemLoader $flatLoader
+     * @param null|string $name
+     */
 	public function __construct(
 		ItemsLoader $flatsLoader,
 		ItemLoader $flatLoader,
-		ItemsFormatter $flatsFormatter,
-		ItemFormatter $flatFormatter,
 		?string $name = null
 	) {
 		parent::__construct($name);
 		$this->flatsLoader = $flatsLoader;
 		$this->flatLoader = $flatLoader;
-		$this->flatsFormatter = $flatsFormatter;
-		$this->flatFormatter = $flatFormatter;
 	}
 
 
 	protected function configure()
 	{
 		$this->setName('Avito:flat:initMsk');
-		$this->setDescription('Load all existed Avito msk flat ads via js api');
+		$this->setDescription('Load all existed Avito msk flat rent ads via js api');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
@@ -61,7 +61,8 @@ class AvitoFlatMskRentInit extends Command
 		    if($i++ > 1) break;
             $flat = $this->flatLoader->load($flat);
             $flat = new Flat($flat);
-            $output->writeln(print_r($flat->toArray(), 1));
+            //$this->adRepository->save($flat);
+            $output->writeln(print_r($flat->toEsArray(), 1));
 		}
 	}
 }

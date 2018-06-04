@@ -8,6 +8,7 @@
 
 namespace App\Entity\Ads;
 
+use App\Exceptions\CannotGetFieldValueForEsException;
 use Doctrine\ORM\Mapping as ORM;
 
 abstract class AbstractAd
@@ -218,19 +219,53 @@ abstract class AbstractAd
 
     abstract public static function getEsType();
 
-    public function toArray(): array
+    /**
+     * @return array
+     */
+    public function toEsArray(): array
     {
         $result = [];
 
         foreach($this as $field => $value)
         {
-            /** @TODO make refactoring. Maybe you should use new method and Exception for fields that shouldn't be in result array? */
-            $method = 'get' . ucfirst($field);
-            if(method_exists($this, $method)) {
-                $result[$field] = $this->$method();
+            try
+            {
+                $result[$field] = $this->getFieldValueForEs($field);
+            }
+            catch(CannotGetFieldValueForEsException $e)
+            {
+                continue;
             }
         }
 
+        $result = array_merge($result, $this->getAdditionalFieldValuesForEs());
+
         return $result;
+    }
+
+    /**
+     * @param $field
+     * @return mixed
+     * @throws CannotGetFieldValueForEsException
+     */
+    protected function getFieldValueForEs($field)
+    {
+        $method = 'get' . ucfirst($field);
+        if(method_exists($this, $method))
+        {
+            return $this->$method();
+        }
+        else
+        {
+            throw new CannotGetFieldValueForEsException("Cannot get field '$field' for ElasticSearch document array.");
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAdditionalFieldValuesForEs(): array
+    {
+        return [];
     }
 }

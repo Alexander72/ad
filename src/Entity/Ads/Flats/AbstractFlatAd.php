@@ -9,6 +9,7 @@
 namespace App\Entity\Ads\Flats;
 
 use App\Entity\Ads\AbstractAd;
+use App\Exceptions\CannotGetFieldValueForEsException;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +68,11 @@ abstract class AbstractFlatAd extends AbstractAd
      * @ORM\Column(type="float")
      */
     protected $lon;
+
+    /**
+     * @ORM\Column(type="int")
+     */
+    protected $unitPrice;
 
     /**
      * @return mixed
@@ -249,6 +255,29 @@ abstract class AbstractFlatAd extends AbstractAd
     }
 
     /**
+     * @return mixed
+     */
+    public function getUnitPrice()
+    {
+        if(is_null($this->unitPrice))
+        {
+            $this->unitPrice = $this->getPrice() / $this->getArea();
+        }
+
+        return $this->unitPrice;
+    }
+
+    /**
+     * @param mixed $unitPrice
+     * @return AbstractFlatAd
+     */
+    protected function setUnitPrice($unitPrice)
+    {
+        $this->unitPrice = $unitPrice;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public static function getEsType()
@@ -256,4 +285,34 @@ abstract class AbstractFlatAd extends AbstractAd
         return self::ES_TYPE;
     }
 
+    /**
+     * @param $field
+     * @return mixed
+     * @throws CannotGetFieldValueForEsException
+     */
+    protected function getFieldValueForEs($field)
+    {
+        $deniedFields = ['lon', 'lat'];
+        if(in_array($field, $deniedFields))
+        {
+            throw new CannotGetFieldValueForEsException("Cannot get field '$field' for ElasticSearch document array.");
+        }
+        else
+        {
+            return parent::getFieldValueForEs($field);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAdditionalFieldValuesForEs(): array
+    {
+        return [
+            'coords' => [
+                'lat' => $this->getLat(),
+                'lon' => $this->getLon(),
+            ]
+        ];
+    }
 }

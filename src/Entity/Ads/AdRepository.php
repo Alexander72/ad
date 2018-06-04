@@ -35,7 +35,7 @@ class AdRepository
             'index' => self::INDEX,
             'type' => $ad::getEsType(),
             'id' => $ad->getId(),
-            'body' => $ad->toArray(),
+            'body' => $ad->toEsArray(),
         ];
 
         $this->esClient->index($data);
