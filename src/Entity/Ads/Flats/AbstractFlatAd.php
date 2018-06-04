@@ -70,7 +70,7 @@ abstract class AbstractFlatAd extends AbstractAd
     protected $lon;
 
     /**
-     * @ORM\Column(type="int")
+     * @ORM\Column(type="integer")
      */
     protected $unitPrice;
 
