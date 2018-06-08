@@ -12,6 +12,8 @@ use App\Interfaces\Formatters\FormatterInterface;
 
 class ItemFormatter implements FormatterInterface
 {
+    const SITE = 'avito';
+
 	public function format(string $flat, $params = []): array
 	{
         $flats = json_decode($flat, 1);
@@ -19,7 +21,7 @@ class ItemFormatter implements FormatterInterface
         $flat = reset($flat);
 
 	    $result = [
-	        'id'          => (integer) $this->getArrayValue($params, ['item', 'id']),
+	        'siteId'     => (integer) $this->getArrayValue($params, ['item', 'id']),
 	        'lat'         => (float) $this->getArrayValue($params, ['item', 'lat']),
 	        'lon'         => (float) $this->getArrayValue($params, ['item', 'lon']),
 	        'title'       => $this->getArrayValue($flat, 'title'),
@@ -34,8 +36,12 @@ class ItemFormatter implements FormatterInterface
             'area'        => (integer) $this->getArrayValue($flat, ['ext', 'area']),
             'areaKitchen' => (integer) $this->getArrayValue($flat, ['ext', 'area_kitchen']),
             'areaLive'    => (integer) $this->getArrayValue($flat, ['ext', 'area_live']),
-            'data'        => $flat,
+            //'data'        => $flat,
         ];
+
+	    $result['unitPrice'] = $result['price'] / $result['area'];
+	    $result['site'] = self::SITE;
+
         return $result;
 	}
 

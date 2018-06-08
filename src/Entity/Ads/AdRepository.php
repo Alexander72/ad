@@ -28,6 +28,12 @@ class AdRepository
 
     public function save(AbstractAd $ad)
     {
+        /*$existedAd = $this->em->getRepository(get_class($ad))->findOneBy(['site' => $ad->getSite(), 'site_id' => $ad->getSiteId()]);
+        if($existedAd === null)
+        {
+            $existedAd = $ad;
+        }*/
+
         $this->em->persist($ad);
         $this->em->flush();
 
@@ -37,6 +43,8 @@ class AdRepository
             'id' => $ad->getId(),
             'body' => $ad->toEsArray(),
         ];
+
+        print_r($data);//die();
 
         $this->esClient->index($data);
     }

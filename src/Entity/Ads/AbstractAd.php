@@ -31,7 +31,7 @@ abstract class AbstractAd
     protected $price;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     protected $type;
 
@@ -55,6 +55,10 @@ abstract class AbstractAd
      */
     protected $url;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $siteId;
 
     /**
      * AbstractAd constructor.
@@ -214,6 +218,24 @@ abstract class AbstractAd
     public function setUrl($url)
     {
         $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteId()
+    {
+        return $this->siteId;
+    }
+
+    /**
+     * @param $siteId
+     * @return AbstractAd
+     */
+    public function setSiteId($siteId): self
+    {
+        $this->siteId = $siteId;
         return $this;
     }
 
