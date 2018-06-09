@@ -11,10 +11,11 @@ namespace App\Interfaces\Formatters;
 
 interface FormatterInterface
 {
-	/**
-	 * Formats input string to array
-	 * @param string $input
-	 * @return array
-	 */
+    /**
+     * Formats input string to array
+     * @param string $input
+     * @param array $params
+     * @return array
+     */
 	public function format(string $input, $params = []): array;
 }

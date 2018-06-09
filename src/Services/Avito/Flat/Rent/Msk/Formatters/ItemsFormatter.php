@@ -14,6 +14,7 @@ class ItemsFormatter implements FormatterInterface
 {
     /**
      * @param string $flats
+     * @param array $params
      * @return array
      * @throws \Exception
      */

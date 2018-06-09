@@ -8,34 +8,30 @@
 
 namespace App\Entity\Ads;
 
+use App\Entity\Ads\Flats\Flat;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Elasticsearch\ClientBuilder;
 
-class AdRepository
+class AdRepository extends ServiceEntityRepository
 {
     const INDEX = 'ad';
 
-    private $em;
     private $esClient;
 
-    public function __construct(
-        EntityManagerInterface $em
-    ) {
-        $this->em = $em;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Flat::class);
         $this->esClient = ClientBuilder::create()->build();
     }
 
-
     public function save(AbstractAd $ad)
     {
-        /*$existedAd = $this->em->getRepository(get_class($ad))->findOneBy(['site' => $ad->getSite(), 'site_id' => $ad->getSiteId()]);
-        if($existedAd === null)
-        {
-            $existedAd = $ad;
-        }*/
-
-        $this->em->persist($ad);
-        $this->em->flush();
+        $this->_em->persist($ad);
+        $this->_em->flush();
 
         $data = [
             'index' => self::INDEX,
@@ -43,8 +39,6 @@ class AdRepository
             'id' => $ad->getId(),
             'body' => $ad->toEsArray(),
         ];
-
-        print_r($data);//die();
 
         $this->esClient->index($data);
     }
