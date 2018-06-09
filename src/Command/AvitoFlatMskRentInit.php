@@ -11,7 +11,7 @@ namespace App\Command;
 
 use App\Entity\Ads\AdRepository;
 use App\Entity\Ads\Flats\Flat;
-use App\Services\Avito\Flat\Rent\Msk\Loaders\Items\ItemsLoader;
+use App\Services\Loaders\Avito\ItemsLoader;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Item\ItemLoader;
 
 use Symfony\Component\Console\Command\Command;
@@ -69,16 +69,29 @@ class AvitoFlatMskRentInit extends Command
          *
          */
 
-		$flats = $this->flatsLoader->load();
+		$flatsGenerator = $this->flatsLoader->load();
 		$i = 0;
 
-		foreach($flats as $flat)
+		foreach($flatsGenerator as $flats)
 		{
-		    if($i++ > 1) break;
-            $flat = $this->flatLoader->load($flat);
-            $flat = new Flat($flat);
-            $this->adRepository->save($flat);
-            $output->writeln(print_r($flat->toEsArray(), 1));
-		}
+            foreach ($flats as $flat)
+            {
+                $i++;
+                $output->write("$i: ");
+
+                $existedFlat = $this->adRepository->findOneBy(['site' => 'avito', 'siteId' => $flat['id']]);
+
+                if ($existedFlat !== null)
+                {
+                    $output->writeln('skipped');
+                    continue;
+                }
+
+                $flat = $this->flatLoader->load($flat);
+                $flat = new Flat($flat);
+                $this->adRepository->save($flat);
+                $output->writeln("loaded");
+            }
+        }
 	}
 }
