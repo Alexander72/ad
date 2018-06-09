@@ -9,6 +9,8 @@
 namespace App\Services\Loaders\Avito\Http;
 
 
+use Psr\Log\LoggerInterface;
+
 class Sender
 {
     /**
@@ -26,18 +28,32 @@ class Sender
      */
     const BASE_URL = 'https://www.avito.ru';
 
+	/**
+	 * @var LoggerInterface
+	 */
+    protected $logger;
+
     /**
      * @var float
      */
     static protected $lastSendTime = 0;
 
-    /**
+	public function __construct(
+		LoggerInterface $logger
+	) {
+		$this->logger = $logger;
+	}
+
+
+	/**
      * @param $url
      * @return string
      */
     public function send($url): string
     {
         $url = self::BASE_URL . $url;
+
+        $this->logger->debug($url);
 
         $this->waitBeforeSend();
 
