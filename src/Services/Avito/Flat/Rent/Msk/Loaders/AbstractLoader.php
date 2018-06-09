@@ -16,7 +16,7 @@ abstract class AbstractLoader
 	/**
 	 * Request per second count allowed to send without ip blocking by Avito
 	 */
-	const NON_BLOCKED_REQUESTS_PER_SECOND = 1;
+	const NON_BLOCKED_REQUESTS_PER_SECOND = 5;
 
 	/**
 	 * Request duration in ms
