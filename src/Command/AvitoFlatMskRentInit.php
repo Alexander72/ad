@@ -15,6 +15,7 @@ use App\Services\Loaders\Avito\ItemsLoader;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Item\ItemLoader;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,6 +26,8 @@ class AvitoFlatMskRentInit extends Command
 	protected $flatLoader;
 
 	protected $adRepository;
+
+	const REQUEST_COUNT = 'requestCount';
 
     /**
      * AvitoFlatMskRentInit constructor.
@@ -49,6 +52,7 @@ class AvitoFlatMskRentInit extends Command
 	protected function configure()
 	{
 		$this->setName('Avito:flat:initMsk');
+		$this->addArgument(self::REQUEST_COUNT, InputArgument::OPTIONAL);
 		$this->setDescription('Load all existed Avito msk flat rent ads via js api');
 	}
 
@@ -71,12 +75,18 @@ class AvitoFlatMskRentInit extends Command
 
 		$flatsGenerator = $this->flatsLoader->load();
 		$i = 0;
+		$requestCount = $input->getArgument(self::REQUEST_COUNT);
 
 		foreach($flatsGenerator as $flats)
 		{
             foreach ($flats as $flat)
             {
                 $i++;
+                if($requestCount && $i > $requestCount)
+                {
+                	$output->writeln('Exited!');
+                	break 2;
+                }
                 $output->write("$i: ");
 
                 $existedFlat = $this->adRepository->findOneBy(['site' => 'avito', 'siteId' => $flat['id']]);
@@ -93,5 +103,6 @@ class AvitoFlatMskRentInit extends Command
                 $output->writeln("loaded");
             }
         }
+		$output->writeln('Stop!');
 	}
 }
