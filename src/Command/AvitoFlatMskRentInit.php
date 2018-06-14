@@ -83,6 +83,10 @@ class AvitoFlatMskRentInit extends Command
 		$flatsGenerator = $this->flatsLoader->load();
 		$i = 0;
 		$requestCount = $input->getArgument(self::REQUEST_COUNT);
+		if($requestCount)
+		{
+			$this->logger->info("Start to load $requestCount flats");
+		}
 
 		foreach($flatsGenerator as $flats)
 		{
@@ -106,7 +110,7 @@ class AvitoFlatMskRentInit extends Command
                 $flat = $this->flatLoader->load($flat);
                 $flat = new Flat($flat);
                 $this->adRepository->save($flat);
-                $this->logger->info("$i: id[{$flat['id']}] - loaded");
+                $this->logger->info("$i: id[{$flat->getId()}] - loaded");
             }
         }
 		$this->logger->notice('Stop!');
