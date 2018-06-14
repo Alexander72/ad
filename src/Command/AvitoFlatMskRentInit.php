@@ -99,6 +99,7 @@ class AvitoFlatMskRentInit extends Command
                 	break 2;
                 }
 
+	            /** @TODO use redis. In init command it is unnecessary to load flats from db.  */
                 $existedFlat = $this->adRepository->findOneBy(['site' => 'avito', 'siteId' => $flat['id']]);
 
                 if ($existedFlat !== null)
