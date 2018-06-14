@@ -14,6 +14,7 @@ use App\Entity\Ads\Flats\Flat;
 use App\Services\Loaders\Avito\ItemsLoader;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Item\ItemLoader;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,6 +27,11 @@ class AvitoFlatMskRentInit extends Command
 	protected $flatLoader;
 
 	protected $adRepository;
+
+	/**
+	 * @var LoggerInterface
+	 */
+	private $logger;
 
 	const REQUEST_COUNT = 'requestCount';
 
@@ -40,14 +46,15 @@ class AvitoFlatMskRentInit extends Command
 		ItemsLoader $flatsLoader,
 		ItemLoader $flatLoader,
         AdRepository $adRepository,
+		LoggerInterface $logger,
 		?string $name = null
 	) {
 		parent::__construct($name);
 		$this->flatsLoader = $flatsLoader;
 		$this->flatLoader = $flatLoader;
 		$this->adRepository = $adRepository;
+		$this->logger = $logger;
 	}
-
 
 	protected function configure()
 	{
@@ -84,25 +91,24 @@ class AvitoFlatMskRentInit extends Command
                 $i++;
                 if($requestCount && $i > $requestCount)
                 {
-                	$output->writeln('Exited!');
+                	$this->logger->notice('Exited!');
                 	break 2;
                 }
-                $output->write("$i: ");
 
                 $existedFlat = $this->adRepository->findOneBy(['site' => 'avito', 'siteId' => $flat['id']]);
 
                 if ($existedFlat !== null)
                 {
-                    $output->writeln('skipped');
+                    $this->logger->info("$i: id[{$flat['id']}] - skipped");
                     continue;
                 }
 
                 $flat = $this->flatLoader->load($flat);
                 $flat = new Flat($flat);
                 $this->adRepository->save($flat);
-                $output->writeln("loaded");
+                $this->logger->info("$i: id[{$flat['id']}] - loaded");
             }
         }
-		$output->writeln('Stop!');
+		$this->logger->notice('Stop!');
 	}
 }
