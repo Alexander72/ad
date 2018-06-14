@@ -20,12 +20,14 @@ class AdRepository extends ServiceEntityRepository
 {
     const INDEX = 'ad';
 
+    const ES_HOST = 'elastic:9200';
+
     private $esClient;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Flat::class);
-        $this->esClient = ClientBuilder::create()->build();
+        $this->esClient = ClientBuilder::create()->setHosts([self::ES_HOST])->build();
     }
 
     public function save(AbstractAd $ad)
