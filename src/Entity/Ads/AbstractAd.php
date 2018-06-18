@@ -60,22 +60,17 @@ abstract class AbstractAd
      */
     protected $siteId;
 
-    /**
-     * AbstractAd constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        foreach ($data as $field => $value)
-        {
-            $method = 'set' . ucfirst($field);
-            if(method_exists($this, $method))
-            {
-                $this->$method($value);
-            }
-        }
-    }
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	protected $published;
 
+	/**
+	 * @ORM\Column(type="string")
+	 */
+	protected $description;
+
+    protected $loader;
 
     /**
      * @return mixed
@@ -229,6 +224,63 @@ abstract class AbstractAd
         return $this->siteId;
     }
 
+	/**
+	 * @return mixed
+	 */
+	public function getPublished()
+	{
+		return $this->published;
+	}
+
+	/**
+	 * @param mixed $published
+	 * @return AbstractAd
+	 */
+	public function setPublished($published)
+	{
+		$this->published = $published;
+
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getDescription()
+	{
+		return $this->description;
+	}
+
+	/**
+	 * @param mixed $description
+	 * @return AbstractAd
+	 */
+	public function setDescription($description)
+	{
+		$this->description = $description;
+
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getLoader()
+	{
+		return $this->loader;
+	}
+
+	/**
+	 * @param mixed $loader
+	 * @return AbstractAd
+	 */
+	public function setLoader($loader)
+	{
+		$this->loader = $loader;
+
+		return $this;
+	}
+
     /**
      * @param $siteId
      * @return AbstractAd
@@ -238,6 +290,18 @@ abstract class AbstractAd
         $this->siteId = $siteId;
         return $this;
     }
+
+	public function fill(array $data)
+	{
+		foreach ($data as $field => $value)
+		{
+			$method = 'set' . ucfirst($field);
+			if(method_exists($this, $method))
+			{
+				$this->$method($value);
+			}
+		}
+	}
 
     abstract public static function getEsType();
 
