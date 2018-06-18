@@ -59,7 +59,7 @@ class AdCache
 
 	/**
 	 * Whether ad differ from cached ad. Method search ad in cache by id.
-	 * In case ad doesn't exist in cache return false
+	 * In case ad doesn't exist in cache return true
 	 *
 	 * @param AbstractAd $ad
 	 * @return bool
