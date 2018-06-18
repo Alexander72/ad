@@ -12,7 +12,8 @@ namespace App\Command;
 use App\Entity\Ads\AdRepository;
 use App\Entity\Ads\Flats\Flat;
 use App\Services\Loaders\Avito\ItemsLoader;
-use App\Services\Avito\Flat\Rent\Msk\Loaders\Item\ItemLoader;
+use App\Services\AdCache;
+use App\Entity\Ads\Flats\AdFlatFactory;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -24,42 +25,53 @@ class AvitoFlatMskRentInit extends Command
 {
 	protected $flatsLoader;
 
-	protected $flatLoader;
+	protected $adFlatFactory;
 
 	protected $adRepository;
+
+	protected $adCache;
 
 	/**
 	 * @var LoggerInterface
 	 */
 	private $logger;
 
+	private $isTestMode;
+
 	const REQUEST_COUNT = 'requestCount';
 
-    /**
-     * AvitoFlatMskRentInit constructor.
-     * @param ItemsLoader $flatsLoader
-     * @param ItemLoader $flatLoader
-     * @param AdRepository $adRepository
-     * @param null|string $name
-     */
+	const IS_TEST_MODE = 'testMode';
+
+	/**
+	 * AvitoFlatMskRentInit constructor.
+	 * @param ItemsLoader $flatsLoader
+	 * @param AdFlatFactory $adFlatFactory
+	 * @param AdRepository $adRepository
+	 * @param LoggerInterface $logger
+	 * @param AdCache $adCache
+	 * @param null|string $name
+	 */
 	public function __construct(
 		ItemsLoader $flatsLoader,
-		ItemLoader $flatLoader,
+        AdFlatFactory $adFlatFactory,
         AdRepository $adRepository,
 		LoggerInterface $logger,
+		AdCache $adCache,
 		?string $name = null
 	) {
 		parent::__construct($name);
 		$this->flatsLoader = $flatsLoader;
-		$this->flatLoader = $flatLoader;
+		$this->adFlatFactory = $adFlatFactory;
 		$this->adRepository = $adRepository;
 		$this->logger = $logger;
+		$this->adCache = $adCache;
 	}
 
 	protected function configure()
 	{
 		$this->setName('Avito:flat:initMsk');
 		$this->addArgument(self::REQUEST_COUNT, InputArgument::OPTIONAL);
+		$this->addOption(self::IS_TEST_MODE);
 		$this->setDescription('Load all existed Avito msk flat rent ads via js api');
 	}
 
@@ -80,6 +92,8 @@ class AvitoFlatMskRentInit extends Command
          *
          */
 
+        $this->isTestMode = $input->getOption(self::IS_TEST_MODE);
+
 		$flatsGenerator = $this->flatsLoader->load();
 		$i = 0;
 		$requestCount = $input->getArgument(self::REQUEST_COUNT);
@@ -90,7 +104,7 @@ class AvitoFlatMskRentInit extends Command
 
 		foreach($flatsGenerator as $flats)
 		{
-            foreach ($flats as $flat)
+            foreach ($flats as $flatData)
             {
                 $i++;
                 if($requestCount && $i > $requestCount)
@@ -99,18 +113,22 @@ class AvitoFlatMskRentInit extends Command
                 	break 2;
                 }
 
-	            /** @TODO use redis. In init command it is unnecessary to load flats from db.  */
-                $existedFlat = $this->adRepository->findOneBy(['site' => 'avito', 'siteId' => $flat['id']]);
+	            $flat = $this->adFlatFactory->create();
+                $flat->fill($flatData);
 
-                if ($existedFlat !== null)
+	            if($this->adCache->isInCache($flat))
+	            {
+		            $this->logger->info("$i: id[{$flat->getId()}] - skipped");
+		            continue;
+	            }
+
+	            $flat->load();
+
+                if(!$this->isTestMode)
                 {
-                    $this->logger->info("$i: id[{$flat['id']}] - skipped");
-                    continue;
+                	$this->adRepository->save($flat);
                 }
 
-                $flat = $this->flatLoader->load($flat);
-                $flat = new Flat($flat);
-                $this->adRepository->save($flat);
                 $this->logger->info("$i: id[{$flat->getId()}] - loaded");
             }
         }
