@@ -8,8 +8,7 @@
 
 namespace App\Services\Loaders\Avito;
 
-
-use App\Services\Avito\Flat\Rent\Msk\Formatters\ItemsFormatter;
+use App\Services\Formatters\Avito\Flats\ItemsFormatter;
 use App\Services\Loaders\Avito\Http\Sender;
 use App\Services\Loaders\Avito\UrlParameters\FlatsUrlGenerator;
 
