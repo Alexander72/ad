@@ -9,6 +9,7 @@
 namespace App\Entity\Ads;
 
 use App\Entity\Ads\Flats\Flat;
+use App\Services\AdCache;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,14 +25,24 @@ class AdRepository extends ServiceEntityRepository
 
     private $esClient;
 
-    public function __construct(ManagerRegistry $registry)
-    {
+    private $adCache;
+
+    public function __construct(
+    	ManagerRegistry $registry,
+		AdCache $adCache
+    ) {
         parent::__construct($registry, Flat::class);
         $this->esClient = ClientBuilder::create()->setHosts([self::ES_HOST])->build();
+        $this->adCache = $adCache;
     }
 
     public function save(AbstractAd $ad)
     {
+    	if(!$this->adCache->isDifferent($ad))
+	    {
+	    	return;
+	    }
+
         $this->_em->persist($ad);
         $this->_em->flush();
 
@@ -43,5 +54,7 @@ class AdRepository extends ServiceEntityRepository
         ];
 
         $this->esClient->index($data);
+
+        $this->adCache->put($ad);
     }
 }
