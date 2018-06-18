@@ -6,10 +6,10 @@
  * Time: 15:55
  */
 
-namespace App\Services\Avito\Flat\Rent\Msk\Loaders\Item;
+namespace App\Services\Loaders\Avito;
 
 use App\Interfaces\Formatters\FormatterInterface;
-use App\Services\Avito\Flat\Rent\Msk\Formatters\ItemFormatter;
+use App\Services\Formatters\Avito\Flats\ItemFormatter;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\AbstractLoader;
 
 class ItemLoader extends AbstractLoader

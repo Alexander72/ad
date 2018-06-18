@@ -6,7 +6,7 @@
  * Time: 15:55
  */
 
-namespace App\Services\Avito\Flat\Rent\Msk\Formatters;
+namespace App\Services\Formatters\Avito\Flats;
 
 use App\Interfaces\Formatters\FormatterInterface;
 
