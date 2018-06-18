@@ -9,13 +9,15 @@
 namespace App\Interfaces\Parsers;
 
 
+use App\Exceptions\ParseException;
+
 interface ParserInterface
 {
     /**
      * Parse input string to array
      *
      * @param string $input
-     * @return array
+     * @throws ParseException
      */
-    public function parse(string $input): array;
+    public function parse(string $input);
 }

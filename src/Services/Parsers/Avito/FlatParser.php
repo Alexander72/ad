@@ -19,10 +19,28 @@ class FlatParser implements ParserInterface
     {
         \phpQuery::newDocument($input);
 
-        $titleElement = pq('.item-view-page-layout .item-view .title-info-title-text');
+        $mapElement = pq('.item-view-map .b-search-map expanded');
+        $titleElement = pq('.item-view-page-layout .title-info-title-text');
+        $descriptionElement = pq('.item-view-page-layout .item-description-text');
+        $published = pq('.item-view-page-layout .title-info .title-info-metadata .title-info-metadata-item')->first()->html();
 
         return [
-            'title' => $titleElement->text()
+            'id' => $mapElement->data('item-id'),
+            'lat' => $mapElement->data('map-lat'),
+            'lon' => $mapElement->data('map-lon'),
+            'title' => $titleElement->text(),
+            'description' => $descriptionElement->html(),
+            'published' => $published,
         ];
+    }
+
+    protected function formatPublished($published)
+    {
+        // № 826273989, размещено сегодня в 11:52
+        // № 149781707, размещено 10 июня в 11:41
+
+        trim($published);
+        preg_match('/^№ \d+, размещено (.*)$/', $published, $matches);
+
     }
 }
