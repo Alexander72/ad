@@ -8,7 +8,7 @@
 
 namespace App\Tests\Services\Parsers\Avito;
 
-use App\Services\Parsers\Avito\Flat;
+use App\Services\Parsers\Avito\FlatParser;
 use PHPUnit\Framework\TestCase;
 
 class FlatTest extends TestCase
@@ -18,7 +18,7 @@ class FlatTest extends TestCase
      */
     public function testParse($input,$expected)
     {
-        $parser = new Flat();
+        $parser = new FlatParser();
 
         $this->assertEquals($expected, $parser->parse($input));
     }

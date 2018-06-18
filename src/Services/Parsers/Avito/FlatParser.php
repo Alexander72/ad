@@ -11,7 +11,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . 'vendor/electrolinux/phpquery/phpQuery/
 
 use App\Interfaces\Parsers\ParserInterface;
 
-class Flat implements ParserInterface
+class FlatParser implements ParserInterface
 {
     protected $pq = 'pq';
 
