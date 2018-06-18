@@ -59,6 +59,9 @@
     "elasticsearch/elasticsearch": {
         "version": "v6.0.1"
     },
+    "electrolinux/phpquery": {
+        "version": "0.9.6"
+    },
     "guzzlehttp/ringphp": {
         "version": "1.1.0"
     },

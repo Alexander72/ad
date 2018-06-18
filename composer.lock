@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb8c2e459c7aa06bc00c58831b01bcc7",
+    "content-hash": "6c4044f15e1f5f55a9cebf3ddf4d1939",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -984,6 +984,46 @@
                 "search"
             ],
             "time": "2017-12-05T14:15:58+00:00"
+        },
+        {
+            "name": "electrolinux/phpquery",
+            "version": "0.9.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/electrolinux/phpquery.git",
+                "reference": "6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/electrolinux/phpquery/zipball/6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a",
+                "reference": "6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "phpQuery/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobiasz Cudnik",
+                    "email": "tobiasz.cudnik@gmail.com",
+                    "homepage": "https://github.com/TobiaszCudnik",
+                    "role": "Developer"
+                },
+                {
+                    "name": "didier Belot",
+                    "role": "Packager"
+                }
+            ],
+            "description": "phpQuery is a server-side, chainable, CSS3 selector driven Document Object Model (DOM) API based on jQuery JavaScript Library",
+            "homepage": "http://code.google.com/p/phpquery/",
+            "time": "2013-03-21T12:39:33+00:00"
         },
         {
             "name": "guzzlehttp/ringphp",
