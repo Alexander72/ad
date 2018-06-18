@@ -74,7 +74,7 @@ abstract class AbstractFlatAd extends AbstractAd
      */
     protected $unitPrice;
 
-    /**
+	/**
      * @return mixed
      */
     public function getRoomCount()
@@ -261,7 +261,7 @@ abstract class AbstractFlatAd extends AbstractAd
     {
         if(is_null($this->unitPrice))
         {
-            $this->unitPrice = $this->getPrice() / $this->getArea();
+            $this->unitPrice = $this->getArea() ? $this->getPrice() / $this->getArea() : 0;
         }
 
         return $this->unitPrice;
@@ -315,4 +315,19 @@ abstract class AbstractFlatAd extends AbstractAd
             ]
         ];
     }
+
+	public function load()
+	{
+		/** @TODO throw exception in case object hasn't id or lat or lob */
+		$data = [
+			'id' => $this->getId(),
+			'lat' => $this->getLat(),
+			'lon' => $this->getLon(),
+		];
+
+		$loadedData = $this->loader->load($data);
+		$this->fill($loadedData);
+
+		return $this;
+	}
 }
