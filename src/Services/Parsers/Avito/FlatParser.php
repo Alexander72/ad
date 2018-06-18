@@ -10,37 +10,41 @@ namespace App\Services\Parsers\Avito;
 require_once($_SERVER['DOCUMENT_ROOT'] . 'vendor/electrolinux/phpquery/phpQuery/phpQuery.php');
 
 use App\Interfaces\Parsers\ParserInterface;
+use App\Services\Parsers\DateParser;
 
 class FlatParser implements ParserInterface
 {
-    protected $pq = 'pq';
+    protected $dateParser;
 
-    public function parse(string $input): array
+	public function __construct(
+		DateParser $dateParser
+	) {
+		$this->dateParser = $dateParser;
+	}
+
+
+	public function parse(string $input): array
     {
         \phpQuery::newDocument($input);
 
         $mapElement = pq('.item-view-map .b-search-map expanded');
-        $titleElement = pq('.item-view-page-layout .title-info-title-text');
         $descriptionElement = pq('.item-view-page-layout .item-description-text');
-        $published = pq('.item-view-page-layout .title-info .title-info-metadata .title-info-metadata-item')->first()->html();
+        $publishedText = pq('.item-view-page-layout .title-info .title-info-metadata .title-info-metadata-item')->first()->html();
+        $published = $this->formatPublished($publishedText);
 
         return [
             'id' => $mapElement->data('item-id'),
             'lat' => $mapElement->data('map-lat'),
             'lon' => $mapElement->data('map-lon'),
-            'title' => $titleElement->text(),
             'description' => $descriptionElement->html(),
-            'published' => $published,
+            'published' => $published->format('Y-m-d H:i:s'),
         ];
     }
 
-    protected function formatPublished($published)
+    protected function formatPublished($published): \DateTime
     {
-        // № 826273989, размещено сегодня в 11:52
-        // № 149781707, размещено 10 июня в 11:41
-
         trim($published);
         preg_match('/^№ \d+, размещено (.*)$/', $published, $matches);
-
+        return $this->dateParser->parse($matches[1]);
     }
 }
