@@ -60,11 +60,16 @@ class Sender implements SenderInterface
     {
         $url = self::BASE_URL . $url;
 
-        $this->logger->debug($url);
+	    $this->waitBeforeSend();
 
-        $this->waitBeforeSend();
+	    $this->logger->debug("Load data from url: $url");
 
-        $result = file_get_contents($url);
+	    $profilerStartTime = microtime(1);
+
+	    $result = file_get_contents($url);
+
+	    $requestDuration = (microtime(1) - $profilerStartTime) * 1000;
+	    $this->logger->debug("Request takes $requestDuration milliseconds");
 
         self::$lastSendTime = microtime(1);
 
@@ -81,6 +86,7 @@ class Sender implements SenderInterface
 
         // delay correction because of request processing
         $delayInMilliseconds = max(0, $delayInMilliseconds - (microtime(1) - self::$lastSendTime) * 1000);
+        $this->logger->debug("Wait $delayInMilliseconds milliseconds before send query to ".self::BASE_URL);
         usleep(1000 * $delayInMilliseconds);
 
         return $this;
