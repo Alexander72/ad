@@ -66,7 +66,10 @@ class Sender implements SenderInterface
 
 	    $profilerStartTime = microtime(1);
 
-	    $result = file_get_contents($url);
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    $result = curl_exec($ch);
 
 	    $requestDuration = (microtime(1) - $profilerStartTime) * 1000;
 	    $this->logger->debug("Request takes $requestDuration milliseconds");
@@ -78,6 +81,10 @@ class Sender implements SenderInterface
 
     private function waitBeforeSend(): self
     {
+    	/**
+	     * @TODO Move waiting to separate independent static class.
+	     * Every loader uses own instance of sender that is why sender will always wait before the next request.
+	     */
         $rps = self::NON_BLOCKED_REQUESTS_PER_SECOND;
 
         // The delay in milliseconds that must be waited between requests as
