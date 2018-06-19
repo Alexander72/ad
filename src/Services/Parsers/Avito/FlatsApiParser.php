@@ -8,23 +8,22 @@
 
 namespace App\Services\Parsers\Avito;
 
-use App\Interfaces\Formatters\FormatterInterface;
+use App\Exceptions\ParseException;
+use App\Services\Parsers\AbstractParser;
 
-class FlatsApiParser implements FormatterInterface
+class FlatsApiParser extends AbstractParser
 {
     /**
      * @param string $flats
-     * @param array $params
      * @return array
      * @throws \Exception
      */
-	public function format(string $flats, $params = []): array
+	public function parse(string $flats): array
 	{
 		$flats = json_decode($flats, 1);
 		if(!isset($flats['coords']))
         {
-            /** @TODO create specific exception type */
-            throw new \Exception("Avito api format has changed. The 'coords' key does not exists. Presented keys: ".implode(', ', array_keys($flats)));
+            throw new ParseException("Avito api format has changed. The 'coords' key does not exists. Presented keys: ".implode(', ', array_keys($flats)));
         }
 
         $flats = $flats['coords'];

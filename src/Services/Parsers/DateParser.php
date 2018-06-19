@@ -9,9 +9,8 @@
 namespace App\Services\Parsers;
 
 use App\Exceptions\DateParseException;
-use App\Interfaces\Parsers\ParserInterface;
 
-class DateParser implements ParserInterface
+class DateParser extends AbstractParser
 {
     /**
      * longest keys should be first!
