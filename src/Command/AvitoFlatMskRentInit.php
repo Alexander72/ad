@@ -111,7 +111,7 @@ class AvitoFlatMskRentInit extends Command
                 $i++;
                 if($requestCount && $i > $requestCount)
                 {
-                	$this->logger->notice('Exited!');
+                	$this->logger->info('Exited!');
                 	break 2;
                 }
 
@@ -134,6 +134,6 @@ class AvitoFlatMskRentInit extends Command
                 $this->logger->info("$i: id[{$flat->getId()}] - loaded");
             }
         }
-		$this->logger->notice('Stop!');
+		$this->logger->info('Stop!');
 	}
 }
