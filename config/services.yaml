@@ -45,3 +45,8 @@ services:
           - '@App\Services\Loaders\Avito\Http\Sender'
           - '@App\Services\Parsers\Avito\FlatsApiParser'
 
+    Monolog\Formatter\LineFormatter:
+        arguments:
+          - "[%%datetime%%] %%channel%%.%%level_name%%: %%message%% %%context%% %%extra%%\n"
+          - "Y-m-d H:i:s.u"
+
