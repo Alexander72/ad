@@ -8,7 +8,6 @@
 
 namespace App\Interfaces\Parsers;
 
-
 use App\Exceptions\ParseException;
 
 interface ParserInterface
@@ -20,4 +19,15 @@ interface ParserInterface
      * @throws ParseException
      */
     public function parse(string $input);
+
+    /**
+     * @return array
+     */
+    public function getParams(): array;
+
+    /**
+     * @param array $params
+     * @return ParserInterface
+     */
+    public function setParams(array $params);
 }

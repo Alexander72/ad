@@ -8,11 +8,14 @@
 
 namespace App\Services\Loaders\Avito\Http;
 
-
+use App\Interfaces\Loaders\SenderInterface;
+use App\Traits\ParameterizableTrait;
 use Psr\Log\LoggerInterface;
 
-class Sender
+class Sender implements SenderInterface
 {
+    use ParameterizableTrait;
+
     /**
      * Request per second count allowed to send without ip blocking by Avito
      */
@@ -38,18 +41,22 @@ class Sender
      */
     static protected $lastSendTime = 0;
 
+    /**
+     * Sender constructor.
+     *
+     * @param LoggerInterface $logger
+     */
 	public function __construct(
 		LoggerInterface $logger
 	) {
 		$this->logger = $logger;
 	}
 
-
 	/**
      * @param $url
      * @return string
      */
-    public function send($url): string
+    public function send(string $url): string
     {
         $url = self::BASE_URL . $url;
 

@@ -9,6 +9,7 @@
 namespace App\Entity\Ads;
 
 use App\Exceptions\CannotGetFieldValueForEsException;
+use App\Interfaces\Loaders\LoaderInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 abstract class AbstractAd
@@ -70,6 +71,9 @@ abstract class AbstractAd
 	 */
 	protected $description;
 
+    /**
+     * @var LoaderInterface
+     */
     protected $loader;
 
     /**
@@ -262,19 +266,19 @@ abstract class AbstractAd
 		return $this;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getLoader()
+    /**
+     * @return LoaderInterface|null
+     */
+	public function getLoader(): ?LoaderInterface
 	{
 		return $this->loader;
 	}
 
-	/**
-	 * @param mixed $loader
-	 * @return AbstractAd
-	 */
-	public function setLoader($loader)
+    /**
+     * @param LoaderInterface $loader
+     * @return $this
+     */
+	public function setLoader(LoaderInterface $loader)
 	{
 		$this->loader = $loader;
 

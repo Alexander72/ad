@@ -6,11 +6,11 @@
  * Time: 15:49
  */
 
-namespace App\Services\Formatters\Avito\Flats;
+namespace App\Services\Parsers\Avito;
 
 use App\Interfaces\Formatters\FormatterInterface;
 
-class ItemsFormatter implements FormatterInterface
+class FlatsApiParser implements FormatterInterface
 {
     /**
      * @param string $flats

@@ -8,13 +8,13 @@
 
 namespace App\Entity\Ads\Flats;
 
-use App\Services\Loaders\Avito\ItemLoader;
+use App\Services\Loaders\Avito\FlatLoader;
 
 class AdFlatFactory
 {
 	protected $loader;
 
-	public function __construct(ItemLoader $loader)
+	public function __construct(FlatLoader $loader)
 	{
 		$this->loader = $loader;
 	}

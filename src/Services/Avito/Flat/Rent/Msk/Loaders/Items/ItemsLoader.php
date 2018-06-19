@@ -11,7 +11,7 @@ namespace App\Services\Avito\Flat\Rent\Msk\Loaders\Items;
 
 use App\Interfaces\Formatters\FormatterInterface;
 use App\Services\Avito\Flat\Rent\Msk\Formatters\ItemsFormatter;
-use App\Services\Avito\Flat\Rent\Msk\Loaders\AbstractLoader;
+use App\Services\Loaders\AbstractLoader;
 use App\Services\Avito\Flat\Rent\Msk\Loaders\Items\UrlParameters\TokenLoader;
 
 class ItemsLoader extends AbstractLoader
@@ -44,7 +44,7 @@ class ItemsLoader extends AbstractLoader
 		return $url . '?' . http_build_query($params);
 	}
 
-	protected function getFormatter(): FormatterInterface
+	protected function getParser(): FormatterInterface
 	{
 		return $this->itemsFormatter;
 	}

@@ -11,7 +11,7 @@ namespace App\Command;
 
 use App\Entity\Ads\AdRepository;
 use App\Entity\Ads\Flats\Flat;
-use App\Services\Loaders\Avito\ItemsLoader;
+use App\Services\Loaders\Avito\FlatsLoader;
 use App\Services\AdCache;
 use App\Entity\Ads\Flats\AdFlatFactory;
 
@@ -44,7 +44,7 @@ class AvitoFlatMskRentInit extends Command
 
 	/**
 	 * AvitoFlatMskRentInit constructor.
-	 * @param ItemsLoader $flatsLoader
+	 * @param FlatsLoader $flatsLoader
 	 * @param AdFlatFactory $adFlatFactory
 	 * @param AdRepository $adRepository
 	 * @param LoggerInterface $logger
@@ -52,12 +52,12 @@ class AvitoFlatMskRentInit extends Command
 	 * @param null|string $name
 	 */
 	public function __construct(
-		ItemsLoader $flatsLoader,
+        FlatsLoader $flatsLoader,
         AdFlatFactory $adFlatFactory,
         AdRepository $adRepository,
-		LoggerInterface $logger,
-		AdCache $adCache,
-		?string $name = null
+        LoggerInterface $logger,
+        AdCache $adCache,
+        ?string $name = null
 	) {
 		parent::__construct($name);
 		$this->flatsLoader = $flatsLoader;
@@ -77,6 +77,8 @@ class AvitoFlatMskRentInit extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+	    /** @TODO check migrations before run! */
+
         /**
          * PUT ad
          * {}

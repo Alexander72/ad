@@ -6,24 +6,26 @@
  * Time: 15:55
  */
 
-namespace App\Services\Formatters\Avito\Flats;
+namespace App\Services\Parsers\Avito;
 
-use App\Interfaces\Formatters\FormatterInterface;
+use App\Services\Parsers\AbstractParser;
 
-class ItemFormatter implements FormatterInterface
+class FlatApiParser extends AbstractParser
 {
     const SITE = 'avito';
 
-	public function format(string $flat, $params = []): array
+	public function parse(string $flat): array
 	{
+	    $params = $this->getParams();
+
         $flats = json_decode($flat, 1);
         $flat = $this->getArrayValue($flats, 'items');
         $flat = reset($flat);
 
 	    $result = [
-	        'siteId'     => (integer) $this->getArrayValue($params, ['item', 'id']),
-	        'lat'         => (float) $this->getArrayValue($params, ['item', 'lat']),
-	        'lon'         => (float) $this->getArrayValue($params, ['item', 'lon']),
+	        'siteId'      => (integer) $this->getArrayValue($params, ['id']),
+	        'lat'         => (float) $this->getArrayValue($params, ['lat']),
+	        'lon'         => (float) $this->getArrayValue($params, ['lon']),
 	        'title'       => $this->getArrayValue($flat, 'title'),
             'url'         => $this->getArrayValue($flat, 'url'),
             'price'       => (integer) $this->getArrayValue($flat, 'price'),

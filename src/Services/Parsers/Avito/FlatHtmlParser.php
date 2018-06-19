@@ -10,9 +10,10 @@ namespace App\Services\Parsers\Avito;
 require_once($_SERVER['DOCUMENT_ROOT'] . 'vendor/electrolinux/phpquery/phpQuery/phpQuery.php');
 
 use App\Interfaces\Parsers\ParserInterface;
+use App\Services\Parsers\AbstractParser;
 use App\Services\Parsers\DateParser;
 
-class FlatParser implements ParserInterface
+class FlatHtmlParser extends AbstractParser
 {
     protected $dateParser;
 
@@ -21,7 +22,6 @@ class FlatParser implements ParserInterface
 	) {
 		$this->dateParser = $dateParser;
 	}
-
 
 	public function parse(string $input): array
     {
@@ -41,6 +41,11 @@ class FlatParser implements ParserInterface
         ];
     }
 
+    /**
+     * @param $published
+     * @return \DateTime
+     * @throws \App\Exceptions\DateParseException
+     */
     protected function formatPublished($published): \DateTime
     {
         trim($published);

@@ -318,14 +318,14 @@ abstract class AbstractFlatAd extends AbstractAd
 
 	public function load()
 	{
-		/** @TODO throw exception in case object hasn't id or lat or lob */
+		/** @TODO throw exception in case object hasn't id or lat or lon */
 		$data = [
 			'id' => $this->getId(),
 			'lat' => $this->getLat(),
 			'lon' => $this->getLon(),
 		];
 
-		$loadedData = $this->loader->load($data);
+		$loadedData = $this->loader->setParams($data)->load();
 		$this->fill($loadedData);
 
 		return $this;

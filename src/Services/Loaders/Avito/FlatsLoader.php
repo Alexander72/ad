@@ -8,53 +8,45 @@
 
 namespace App\Services\Loaders\Avito;
 
-use App\Services\Formatters\Avito\Flats\ItemsFormatter;
-use App\Services\Loaders\Avito\Http\Sender;
+use App\Interfaces\Loaders\SenderInterface;
+use App\Interfaces\Parsers\ParserInterface;
+use App\Services\Loaders\AbstractLoader;
 use App\Services\Loaders\Avito\UrlParameters\FlatsUrlGenerator;
 
-class ItemsLoader
+class FlatsLoader extends AbstractLoader
 {
-    /**
-     * @var Sender
-     */
-    private $sender;
-
     /**
      * @var FlatsUrlGenerator
      */
-    private $urlGenerator;
+    protected $urlGenerator;
 
     /**
-     * @var ItemsFormatter
-     */
-    private $itemsFormatter;
-
-    /**
-     * ItemsLoader constructor.
-     * @param Sender $sender
+     * FlatsLoader constructor.
+     * @param SenderInterface $sender
+     * @param ParserInterface $parser
      * @param FlatsUrlGenerator $urlGenerator
-     * @param ItemsFormatter $itemsFormatter
      */
     public function __construct(
-        Sender $sender,
-        FlatsUrlGenerator $urlGenerator,
-        ItemsFormatter $itemsFormatter
+        SenderInterface $sender,
+        ParserInterface $parser,
+        FlatsUrlGenerator $urlGenerator
     ) {
-        $this->sender = $sender;
+        parent::__construct($sender, $parser);
+
         $this->urlGenerator = $urlGenerator;
-        $this->itemsFormatter = $itemsFormatter;
     }
 
     /**
      * @return \Generator
-     * @throws \Exception
+     * @throws \App\Exceptions\ParseException
      */
     public function load(): \Generator
     {
         foreach($this->urlGenerator->getUrl() as $url)
         {
             $response = $this->sender->send($url);
-            yield $this->itemsFormatter->format($response);
+            $this->parser->setParams($this->getParams());
+            yield $this->parser->parse($response);
         }
     }
 }
