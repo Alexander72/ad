@@ -86,7 +86,7 @@ class AdCache
 	{
 		list($key,) = $this->getKeyValue($ad);
 
-		return $this->redisConnect->get($key) === false;
+		return $this->redisConnect->get($key) !== false;
 	}
 
 	/**
