@@ -23,9 +23,9 @@ class FlatApiParser extends AbstractParser
         $flat = reset($flat);
 
 	    $result = [
-	        'siteId'      => (integer) $this->getArrayValue($params, ['id']),
-	        'lat'         => (float) $this->getArrayValue($params, ['lat']),
-	        'lon'         => (float) $this->getArrayValue($params, ['lon']),
+	        'siteId'      => (integer) $this->getArrayValue($params, ['flat', 'id']),
+	        'lat'         => (float) $this->getArrayValue($params, ['flat', 'lat']),
+	        'lon'         => (float) $this->getArrayValue($params, ['flat', 'lon']),
 	        'title'       => $this->getArrayValue($flat, 'title'),
             'url'         => $this->getArrayValue($flat, 'url'),
             'price'       => (integer) $this->getArrayValue($flat, 'price'),
@@ -41,7 +41,7 @@ class FlatApiParser extends AbstractParser
             //'data'        => $flat,
         ];
 
-	    $result['unitPrice'] = $result['price'] / $result['area'];
+	    $result['unitPrice'] = !empty($result['area']) ? $result['price'] / $result['area'] : 0;
 	    $result['site'] = self::SITE;
 
         return $result;

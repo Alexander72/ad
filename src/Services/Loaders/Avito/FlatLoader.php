@@ -11,6 +11,7 @@ namespace App\Services\Loaders\Avito;
 use App\Interfaces\Formatters\FormatterInterface;
 use App\Interfaces\Loaders\SenderInterface;
 use App\Interfaces\Parsers\ParserInterface;
+use App\Services\Loaders\Avito\Http\Sender;
 use App\Services\Parsers\Avito\FlatApiParser;
 use App\Services\Loaders\AbstractLoader;
 
@@ -35,24 +36,28 @@ class FlatLoader extends AbstractLoader
 
     public function load(): array
     {
+        // load data via API
         $url = $this->getApiUrl();
         $response = $this->sender->send($url);
 
-        $this->parser->setParams($this->getParams());
-        $apiData = $this->parser->parse($response);
-        $this->setParams($apiData);
+        $this->apiParser->setParams($this->getParams());
+        $apiData = $this->apiParser->parse($response);
 
-        $url = $this->getUrl($apiData);
-        $this->parser->setParams($this->getParams());
-        $apiData = $this->parser->parse($response);
-        $response = $this->send($url);
+        // load data using html parsing
+        $this->setParams(['flat' => $apiData]);
+
+        $url = $this->getUrl();
+        $response = $this->sender->send($url);
+        $data = $this->parser->parse($response);
+
+        return array_merge($apiData, $data);
     }
 
     protected function getApiUrl(): string
     {
-        $params = $this->getParams();
+        $params = $this->getParam('flat');
 
-        $url = self::BASE_URL . self::API_URL_PATH;
+        $url = self::API_URL_PATH;
 
         /** @TODO add parameter for long time rent ad only */
         /** @TODO params should build in other class; every param should be extracted to different class */
@@ -68,12 +73,7 @@ class FlatLoader extends AbstractLoader
 
     protected function getUrl(): string
     {
-        return '';
+        $flat = $this->getParam('flat');
+        return $flat['url'];
     }
-
-
-    protected function getParser(): ParserInterface
-	{
-	    return $this->itemFormatter;
-	}
 }

@@ -27,4 +27,13 @@ trait ParameterizableTrait
         $this->params = array_merge($this->params, $params);
         return $this;
     }
+
+    /**
+     * @param $paramName
+     * @return null
+     */
+    public function getParam($paramName)
+    {
+        return $this->params[$paramName] ?? null;
+    }
 }

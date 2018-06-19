@@ -320,9 +320,11 @@ abstract class AbstractFlatAd extends AbstractAd
 	{
 		/** @TODO throw exception in case object hasn't id or lat or lon */
 		$data = [
-			'id' => $this->getId(),
-			'lat' => $this->getLat(),
-			'lon' => $this->getLon(),
+		    'flat' => [
+                'id' => $this->getId(),
+                'lat' => $this->getLat(),
+                'lon' => $this->getLon(),
+            ],
 		];
 
 		$loadedData = $this->loader->setParams($data)->load();
