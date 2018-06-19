@@ -27,16 +27,16 @@ class FlatHtmlParser extends AbstractParser
     {
         \phpQuery::newDocument($input);
 
-        $mapElement = pq('.item-view-map .b-search-map expanded');
+        $mapElement = pq('.item-view-map .b-search-map');
         $descriptionElement = pq('.item-view-page-layout .item-description-text');
-        $publishedText = pq('.item-view-page-layout .title-info .title-info-metadata .title-info-metadata-item')->first()->html();
+	    $publishedText = pq('.item-view-page-layout .title-info .title-info-metadata .title-info-metadata-item')->contents()->eq(0)->text();
         $published = $this->formatPublished($publishedText);
 
         return [
-            'id' => $mapElement->data('item-id'),
-            'lat' => $mapElement->data('map-lat'),
-            'lon' => $mapElement->data('map-lon'),
-            'description' => $descriptionElement->html(),
+            'id' => (int) $mapElement->attr('data-item-id'),
+            'lat' => (float) $mapElement->attr('data-map-lat'),
+            'lon' => (float) $mapElement->attr('data-map-lon'),
+            'description' => trim($descriptionElement->text()),
             'published' => $published->format('Y-m-d H:i:s'),
         ];
     }
@@ -48,7 +48,7 @@ class FlatHtmlParser extends AbstractParser
      */
     protected function formatPublished($published): \DateTime
     {
-        trim($published);
+	    $published = trim($published);
         preg_match('/^№ \d+, размещено (.*)$/', $published, $matches);
         return $this->dateParser->parse($matches[1]);
     }
