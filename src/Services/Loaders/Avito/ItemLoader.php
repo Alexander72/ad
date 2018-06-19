@@ -26,8 +26,6 @@ class ItemLoader extends AbstractLoader
 
     protected function getUrl(array $params): string
     {
-        //$url = "https://www.avito.ru/js/catalog/items?id=1044600709&lat=54.89726359110567&lng=38.32359993025392&priceDimensionValue=-1";
-
         $url = self::BASE_URL . self::URL_PATH;
 
         /** @TODO add parameter for long time rent ad only */
@@ -47,5 +45,4 @@ class ItemLoader extends AbstractLoader
 	{
 	    return $this->itemFormatter;
 	}
-
 }

@@ -8,7 +8,6 @@
 
 namespace App\Services\Avito\Flat\Rent\Msk\Loaders;
 
-
 use App\Interfaces\Formatters\FormatterInterface;
 
 abstract class AbstractLoader
