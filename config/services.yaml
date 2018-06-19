@@ -30,8 +30,18 @@ services:
     #  class: \App\Entity\Ads\AdRepository
     #  arguments: ['@doctrine.orm.entity_manager']
 
-    #App\Command\TestEntitySaveCommand:
-    #    arguments: ['','@app.entity.ads.adrepository']
+    App\Services\Loaders\Avito\Http\Sender: ~
+    App\Services\Parsers\Avito\FlatApiParser: ~
+    App\Services\Parsers\Avito\FlatHtmlParser: ~
+    App\Services\Parsers\Avito\FlatsApiParser: ~
 
-    #App\Command\AvitoFlatMskRentInit:
-    #    arguments: ['', '','@app.entity.ads.adrepository']
+    App\Services\Loaders\Avito\FlatLoader:
+        arguments:
+          - '@App\Services\Loaders\Avito\Http\Sender'
+          - '@App\Services\Parsers\Avito\FlatHtmlParser'
+
+    App\Services\Loaders\Avito\FlatsLoader:
+        arguments:
+          - '@App\Services\Loaders\Avito\Http\Sender'
+          - '@App\Services\Parsers\Avito\FlatsApiParser'
+
