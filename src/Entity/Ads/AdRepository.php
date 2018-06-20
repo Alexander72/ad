@@ -21,8 +21,6 @@ class AdRepository extends ServiceEntityRepository
 {
     const INDEX = 'ad';
 
-    const ES_HOST = 'elastic:9200';
-
     private $esClient;
 
     private $adCache;
@@ -32,7 +30,7 @@ class AdRepository extends ServiceEntityRepository
 		AdCache $adCache
     ) {
         parent::__construct($registry, Flat::class);
-        $this->esClient = ClientBuilder::create()->setHosts([self::ES_HOST])->build();
+        $this->esClient = ClientBuilder::create()->setHosts([$_ENV['ELASTIC_HOST'].':'.$_ENV['ELASTIC_PORT']])->build();
         $this->adCache = $adCache;
     }
 

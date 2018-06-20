@@ -47,7 +47,7 @@ final class Version20180620130638 extends AbstractMigration
 
     private function getEsClient()
     {
-        return ClientBuilder::create()->setHosts([AdRepository::ES_HOST])->build();
+        return ClientBuilder::create()->setHosts([$_ENV['ELASTIC_HOST'].':'.$_ENV['ELASTIC_PORT']])->build();
     }
 
     private function getIndexParams()
