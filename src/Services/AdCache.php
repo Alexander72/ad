@@ -35,7 +35,7 @@ class AdCache
 	 */
 	public function put(AbstractAd $ad): self
 	{
-		list($key, $data) = $this->getKeyValue($ad);
+		list($key, $data) = $this->getKeyAndHash($ad);
 
 		$this->redisConnect->set($key, $data);
 
@@ -44,13 +44,12 @@ class AdCache
 
 	/**
 	 * Remove ad from cache
-	 * @param $type
-	 * @param $id
+	 * @param AbstractAd $ad
 	 * @return AdCache
 	 */
-	public function delete($type, $id): self
+	public function delete(AbstractAd $ad): self
 	{
-		$key = $this->getKey($type, $id);
+		list($key,) = $this->getKeyAndHash($ad);
 
 		$this->redisConnect->delete($key);
 
@@ -66,14 +65,15 @@ class AdCache
 	 */
 	public function isDifferent(AbstractAd $ad): bool
 	{
-		list($key, $data) = $this->getKeyValue($ad);
+		list($key,) = $this->getKeyAndHash($ad);
 
-		if($this->redisConnect->get($key) === false)
+		$cachedHash = $this->redisConnect->get($key);
+		if($cachedHash === false)
 		{
 			return true;
 		}
 
-		return $data === $this->getValue($ad);
+		return $cachedHash !== $this->getHash($ad);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class AdCache
 	 */
 	public function isInCache(AbstractAd $ad): bool
 	{
-		list($key,) = $this->getKeyValue($ad);
+		list($key,) = $this->getKeyAndHash($ad);
 
 		return $this->redisConnect->get($key) !== false;
 	}
@@ -95,11 +95,11 @@ class AdCache
 	 * @param AbstractAd $ad
 	 * @return array [key, value]
 	 */
-	protected function getKeyValue(AbstractAd $ad): array
+	protected function getKeyAndHash(AbstractAd $ad): array
 	{
 		return [
 			$this->getKey($ad::getEsType(), $ad->getId()),
-			$this->getValue($ad),
+			$this->getHash($ad),
 		];
 	}
 
@@ -119,7 +119,7 @@ class AdCache
 	 * @param AbstractAd $ad
 	 * @return string
 	 */
-	protected function getValue(AbstractAd $ad)
+	protected function getHash(AbstractAd $ad)
 	{
 		return sha1(json_encode($ad->toEsArray()));
 	}
