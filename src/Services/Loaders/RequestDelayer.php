@@ -22,27 +22,13 @@ class RequestDelayer
 		],
 	];
 
-	protected $lastRequestEndTimes = [];
+	protected $lastRequestSendTimes = [];
 
 	protected function __construct()
 	{
 	}
 
-	/**
-	 * Set timestamp with milliseconds of the last request sent by specific sender
-	 *
-	 * @param string $senderClass
-	 * @param float $timestamp
-	 * @return RequestDelayer
-	 */
-	public function setLastRequestEndTime(string $senderClass, float $timestamp): self
-	{
-		$this->lastRequestEndTimes[$senderClass] = $timestamp;
-
-		return $this;
-	}
-
-	/**
+    /**
 	 * Wait a little before next request will be sent by specific sender
 	 *
 	 * @param string $senderClass
@@ -57,13 +43,30 @@ class RequestDelayer
 		$delayInMilliseconds = (1000 - $rps * self::SITE_SENDER_CONFIGS[$senderClass]['requestDuration']) / $rps;
 
 		// delay correction because of request processing
-		$delayInMilliseconds = max(0, $delayInMilliseconds - (microtime(1) - $this->lastRequestEndTimes[$senderClass]['lastRequestEndTime']) * 1000);
+        $lastRequestSendTime = $this->lastRequestSendTimes[$senderClass] ?? 0;
+        $delayInMilliseconds = max(0, $delayInMilliseconds - (microtime(1) - $lastRequestSendTime) * 1000);
 		usleep(1000 * $delayInMilliseconds);
+
+		$this->setLastRequestSendTime($senderClass, microtime(1));
 
 		return $this;
 	}
 
-	/**
+    /**
+     * Set timestamp with milliseconds of the last request sent by specific sender
+     *
+     * @param string $senderClass
+     * @param float $timestamp
+     * @return RequestDelayer
+     */
+    protected function setLastRequestSendTime(string $senderClass, float $timestamp): self
+    {
+        $this->lastRequestSendTimes[$senderClass] = $timestamp;
+
+        return $this;
+    }
+
+    /**
 	 * Get RequestDelayer singleton
 	 *
 	 * @return RequestDelayer
