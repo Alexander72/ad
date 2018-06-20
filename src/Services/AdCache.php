@@ -25,7 +25,7 @@ class AdCache
 	public function __construct()
 	{
 		$this->redisConnect = new \Redis();
-		$this->redisConnect->connect($_SERVER['REDIS_HOST'], $_SERVER['REDIS_PORT']);
+		$this->redisConnect->connect($_ENV['REDIS_HOST'], $_ENV['REDIS_PORT']);
 	}
 
 	/**
