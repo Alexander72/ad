@@ -79,21 +79,6 @@ class AvitoFlatMskRentInit extends Command
 	{
 	    /** @TODO check migrations before run! */
 
-        /**
-         * PUT ad
-         * {}
-         *
-         * PUT ad/_mapping/flat
-         * {
-         *  "properties": {
-         *   "coords": {
-         *    "type": "geo_point"
-         *   }
-         *  }
-         * }
-         *
-         */
-
         $this->isTestMode = $input->getOption(self::IS_TEST_MODE);
 
 		$flatsGenerator = $this->flatsLoader->load();
