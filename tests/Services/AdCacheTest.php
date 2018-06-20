@@ -8,8 +8,8 @@
 
 namespace App\Tests\Services;
 
-use App\Entity\Ads\Flats\AdFlatFactory;
-use App\Entity\Ads\Flats\Flat;
+use App\Services\Factories\AdFlatFactory;
+use App\Entity\Ads\Flat;
 use App\Services\AdCache;
 use App\Services\Loaders\Avito\FlatLoader;
 use PHPUnit\Framework\TestCase;

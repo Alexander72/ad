@@ -9,11 +9,18 @@
 namespace App\Entity\Ads;
 
 use App\Exceptions\CannotGetFieldValueForEsException;
+use App\Interfaces\Entities\FromArrayConvertibleInterface;
+use App\Interfaces\Entities\ToArrayConvertibleInterface;
 use App\Interfaces\Loaders\LoaderInterface;
+use App\Traits\Entities\ArrayImportedExportedTrait;
 use Doctrine\ORM\Mapping as ORM;
 
-abstract class AbstractAd
+abstract class AbstractAd implements
+	FromArrayConvertibleInterface,
+	ToArrayConvertibleInterface
 {
+	use ArrayImportedExportedTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -67,7 +74,7 @@ abstract class AbstractAd
 	protected $published;
 
 	/**
-	 * @ORM\Column(type="text")
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $description;
 
@@ -285,6 +292,17 @@ abstract class AbstractAd
 		return $this;
 	}
 
+	/**
+	 * Return array of all system fields
+	 *
+	 * @return array
+	 */
+	protected function getSystemFields()
+	{
+		/** @TODO use annotation */
+		return ['loader'];
+	}
+
     /**
      * @param $siteId
      * @return AbstractAd
@@ -294,18 +312,6 @@ abstract class AbstractAd
         $this->siteId = $siteId;
         return $this;
     }
-
-	public function fill(array $data)
-	{
-		foreach ($data as $field => $value)
-		{
-			$method = 'set' . ucfirst($field);
-			if(method_exists($this, $method))
-			{
-				$this->$method($value);
-			}
-		}
-	}
 
     abstract public static function getEsType();
 
@@ -318,6 +324,11 @@ abstract class AbstractAd
 
         foreach($this as $field => $value)
         {
+        	if(in_array($field, ['loader']))
+	        {
+	        	continue;
+	        }
+
             try
             {
                 $result[$this->formatFieldNameForEs($field)] = $this->getFieldValueForEs($field);

@@ -6,8 +6,9 @@
  * Time: 1:02
  */
 
-namespace App\Entity\Ads\Flats;
+namespace App\Services\Factories;
 
+use App\Entity\Ads\Flat;
 use App\Services\Loaders\Avito\FlatLoader;
 
 class AdFlatFactory

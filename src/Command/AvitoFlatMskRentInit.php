@@ -9,11 +9,11 @@
 namespace App\Command;
 
 
-use App\Entity\Ads\AdRepository;
-use App\Entity\Ads\Flats\Flat;
+use App\Services\Repositories\AdRepository;
+use App\Entity\Ads\Flat;
 use App\Services\Loaders\Avito\FlatsLoader;
 use App\Services\AdCache;
-use App\Entity\Ads\Flats\AdFlatFactory;
+use App\Services\Factories\AdFlatFactory;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -101,7 +101,7 @@ class AvitoFlatMskRentInit extends Command
                 }
 
 	            $flat = $this->adFlatFactory->create();
-                $flat->fill($flatData);
+                $flat->fromArray($flatData);
 
 	            if($this->adCache->isInCache($flat))
 	            {

@@ -6,15 +6,13 @@
  * Time: 12:31
  */
 
-namespace App\Entity\Ads;
+namespace App\Services\Repositories;
 
-use App\Entity\Ads\Flats\Flat;
+use App\Entity\Ads\AbstractAd;
+use App\Entity\Ads\Flat;
 use App\Services\AdCache;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Elasticsearch\ClientBuilder;
 
 class AdRepository extends ServiceEntityRepository
@@ -41,7 +39,20 @@ class AdRepository extends ServiceEntityRepository
 	    	return;
 	    }
 
-        $this->_em->persist($ad);
+	    $existedFlat = $this->findOneBy(['site' => $ad->getSite(), 'siteId' => $ad->getSiteId()]);
+	    if($existedFlat)
+	    {
+		    $adEsArray = $ad->toArray();
+		    if($adEsArray == $existedFlat->toArray())
+		    {
+			    return;
+		    }
+
+		    $existedFlat->fromArray($adEsArray);
+		    $ad = $existedFlat;
+	    }
+
+	    $this->_em->persist($ad);
         $this->_em->flush();
 
         $data = [

@@ -8,9 +8,8 @@
 
 namespace App\Services;
 
-
 use App\Entity\Ads\AbstractAd;
-use App\Entity\Ads\AdRepository;
+use App\Services\Repositories\AdRepository;
 
 class AdCache
 {
