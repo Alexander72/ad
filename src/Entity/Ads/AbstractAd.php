@@ -320,7 +320,7 @@ abstract class AbstractAd
         {
             try
             {
-                $result[$field] = $this->getFieldValueForEs($field);
+                $result[$this->formatFieldNameForEs($field)] = $this->getFieldValueForEs($field);
             }
             catch(CannotGetFieldValueForEsException $e)
             {
@@ -357,5 +357,12 @@ abstract class AbstractAd
     protected function getAdditionalFieldValuesForEs(): array
     {
         return [];
+    }
+
+    private function formatFieldNameForEs($fieldName)
+    {
+        $result = strtolower(preg_replace('/([[:upper:]])/', '_$1', $fieldName));
+
+        return $result;
     }
 }
