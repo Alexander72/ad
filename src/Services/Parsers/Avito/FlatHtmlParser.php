@@ -37,7 +37,7 @@ class FlatHtmlParser extends AbstractParser
             'lat' => (float) $mapElement->attr('data-map-lat'),
             'lon' => (float) $mapElement->attr('data-map-lon'),
             'description' => trim($descriptionElement->text()),
-            'published' => $published->format('Y-m-d H:i:s'),
+            'published' => $published,
         ];
     }
 

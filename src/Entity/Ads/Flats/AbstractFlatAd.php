@@ -298,6 +298,10 @@ abstract class AbstractFlatAd extends AbstractAd
         {
             throw new CannotGetFieldValueForEsException("Cannot get field '$field' for ElasticSearch document array.");
         }
+        elseif($field == 'published')
+        {
+            return empty($this->getPublished()) ? null : $this->getPublished()->format('Y-m-d H:i:s');
+        }
         else
         {
             return parent::getFieldValueForEs($field);

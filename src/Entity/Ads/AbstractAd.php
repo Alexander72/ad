@@ -67,7 +67,7 @@ abstract class AbstractAd
 	protected $published;
 
 	/**
-	 * @ORM\Column(type="string")
+	 * @ORM\Column(type="text")
 	 */
 	protected $description;
 
