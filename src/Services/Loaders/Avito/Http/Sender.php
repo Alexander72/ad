@@ -9,22 +9,13 @@
 namespace App\Services\Loaders\Avito\Http;
 
 use App\Interfaces\Loaders\SenderInterface;
+use App\Services\Loaders\RequestDelayer;
 use App\Traits\ParameterizableTrait;
 use Psr\Log\LoggerInterface;
 
 class Sender implements SenderInterface
 {
     use ParameterizableTrait;
-
-    /**
-     * Request per second count allowed to send without ip blocking by Avito
-     */
-    const NON_BLOCKED_REQUESTS_PER_SECOND = 5;
-
-    /**
-     * Request duration in ms
-     */
-    const REQUEST_DURATION = 25;
 
     /**
      * Avito base url
@@ -37,9 +28,9 @@ class Sender implements SenderInterface
     protected $logger;
 
     /**
-     * @var float
+     * @var RequestDelayer
      */
-    static protected $lastSendTime = 0;
+    protected $requestDelayer;
 
     /**
      * Sender constructor.
@@ -50,6 +41,7 @@ class Sender implements SenderInterface
 		LoggerInterface $logger
 	) {
 		$this->logger = $logger;
+		$this->requestDelayer = RequestDelayer::getDelayer();
 	}
 
 	/**
@@ -60,7 +52,7 @@ class Sender implements SenderInterface
     {
         $url = self::BASE_URL . $url;
 
-	    $this->waitBeforeSend();
+	    $this->requestDelayer->wait(self::class);
 
 	    $this->logger->debug("Load data from url: $url");
 
@@ -74,28 +66,6 @@ class Sender implements SenderInterface
 	    $requestDuration = (microtime(1) - $profilerStartTime) * 1000;
 	    $this->logger->debug("Request takes $requestDuration milliseconds");
 
-        self::$lastSendTime = microtime(1);
-
         return $result;
-    }
-
-    private function waitBeforeSend(): self
-    {
-    	/**
-	     * @TODO Move waiting to separate independent static class.
-	     * Every loader uses own instance of sender that is why sender will always wait before the next request.
-	     */
-        $rps = self::NON_BLOCKED_REQUESTS_PER_SECOND;
-
-        // The delay in milliseconds that must be waited between requests as
-        // if the requests are sent in a row without delay for processing
-        $delayInMilliseconds = (1000 - $rps * self::REQUEST_DURATION) / $rps;
-
-        // delay correction because of request processing
-        $delayInMilliseconds = max(0, $delayInMilliseconds - (microtime(1) - self::$lastSendTime) * 1000);
-        $this->logger->debug("Wait $delayInMilliseconds milliseconds before send query to ".self::BASE_URL);
-        usleep(1000 * $delayInMilliseconds);
-
-        return $this;
     }
 }
