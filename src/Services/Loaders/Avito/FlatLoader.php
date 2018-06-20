@@ -55,16 +55,16 @@ class FlatLoader extends AbstractLoader
 
     protected function getApiUrl(): string
     {
-        $params = $this->getParam('flat');
+        /** @TODO make check  if flat does not exists in params */
+        $flat = $this->getParam('flat');
 
         $url = self::API_URL_PATH;
 
-        /** @TODO add parameter for long time rent ad only */
         /** @TODO params should build in other class; every param should be extracted to different class */
         $params = [
-            'id' => $params['id'],
-            'lat' => $params['lat'],
-            'lng' => $params['lon'],
+            'id' => $flat['id'],
+            'lat' => $flat['lat'],
+            'lng' => $flat['lon'],
             'priceDimensionValue' => -1,
         ];
 
