@@ -8,6 +8,7 @@
 
 namespace App\Services\Loaders\Avito;
 
+use App\Exceptions\ParseException;
 use App\Interfaces\Loaders\SenderInterface;
 use App\Interfaces\Parsers\ParserInterface;
 use App\Services\Loaders\AbstractLoader;
@@ -38,7 +39,6 @@ class FlatsLoader extends AbstractLoader
 
     /**
      * @return \Generator
-     * @throws \App\Exceptions\ParseException
      */
     public function load(): \Generator
     {
@@ -46,7 +46,16 @@ class FlatsLoader extends AbstractLoader
         {
             $response = $this->sender->send($url);
             $this->parser->setParams($this->getParams());
-            yield $this->parser->parse($response);
+            try
+            {
+                $flats = $this->parser->parse($response);
+            }
+            catch(ParseException $exception)
+            {
+                $flats = [];
+            }
+
+            yield $flats;
         }
     }
 }

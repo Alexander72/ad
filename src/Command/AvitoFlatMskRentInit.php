@@ -109,7 +109,15 @@ class AvitoFlatMskRentInit extends Command
 		            continue;
 	            }
 
-	            $flat->load();
+	            try
+                {
+                    $flat->load();
+                }
+                catch(\Exception $e)
+                {
+                    $this->logger->alert($e->getMessage());
+                    continue;
+                }
 
                 if(!$this->isTestMode)
                 {

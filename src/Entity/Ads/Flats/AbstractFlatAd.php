@@ -10,6 +10,7 @@ namespace App\Entity\Ads\Flats;
 
 use App\Entity\Ads\AbstractAd;
 use App\Exceptions\CannotGetFieldValueForEsException;
+use App\Exceptions\LoadException;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -316,6 +317,10 @@ abstract class AbstractFlatAd extends AbstractAd
         ];
     }
 
+    /**
+     * @return $this
+     * @throws \Exception
+     */
 	public function load()
 	{
 		/** @TODO throw exception in case object hasn't id or lat or lon */
@@ -327,7 +332,15 @@ abstract class AbstractFlatAd extends AbstractAd
             ],
 		];
 
-		$loadedData = $this->loader->setParams($data)->load();
+		try
+        {
+            $loadedData = $this->loader->setParams($data)->load();
+        }
+        catch(LoadException $e)
+        {
+            /** @TODO create specific exception */
+            throw new \Exception('Cannot load ad due to: ');
+        }
 		$this->fill($loadedData);
 
 		return $this;
