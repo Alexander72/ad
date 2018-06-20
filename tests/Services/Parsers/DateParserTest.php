@@ -38,10 +38,11 @@ class DateParserTest extends TestCase
     public function legalDateDataProvider()
     {
         $y = date('Y');
-        $m = date('n');
-        $d = date('j');
 
-        return [
+        $h = date('H');
+        $m = date('i');
+
+        $result = [
             ['только что', new \DateTime()],
             ['сейчас', new \DateTime()],
 
@@ -72,9 +73,9 @@ class DateParserTest extends TestCase
             ['двеннадцать часов назад', (new \DateTime())->modify('-12 hour')],
             ['12 часов назад', (new \DateTime())->modify('-12 hour')],
 
-            ['сегодня в 13:34', new \DateTime('13:34')],
-            ['сегодня в 04:04', new \DateTime('04:04')],
             ['сегодня в 00:00', new \DateTime('0:00')],
+            ["сегодня в $h:$m", new \DateTime()],
+
             ['вчера в 18:34', (new \DateTime('18:34'))->modify('-1 day')],
             ['вчера в 04:04', (new \DateTime('04:04'))->modify('-1 day')],
             ['вчера в 00:00', (new \DateTime('0:00'))->modify('-1 day')],
@@ -88,6 +89,14 @@ class DateParserTest extends TestCase
             ['13 июня в 23:59', ($tmp = new \DateTime("$y-06-13 23:59")) && $tmp > new \DateTime() ? $tmp->modify('-1 year') : $tmp],
             ['12 мая в 00:00', ($tmp = new \DateTime("$y-05-12 00:00")) && $tmp > new \DateTime() ? $tmp->modify('-1 year') : $tmp],
         ];
+
+        if((new \DateTime()) > (new \DateTime('04:04')))
+            $result[] = ['сегодня в 04:04', new \DateTime('04:04')];
+
+        if((new \DateTime()) > (new \DateTime('13:34')))
+            $result[] = ['сегодня в 13:34', new \DateTime('13:34')];
+
+        return $result;
     }
 
     public function exceptionDateDataProvider()
