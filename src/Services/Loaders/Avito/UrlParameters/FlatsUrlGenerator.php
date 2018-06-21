@@ -34,7 +34,7 @@ class FlatsUrlGenerator
     {
         /** @TODO params should build in other class; every param should be extracted to different class */
         $params = [
-            'token[7590738133237]' => '6680263b5a4bc727',
+            'token[132581390920]' => '7a2722f5604e1713',
             'category_id' => 24,//категория - квартиры
             'location_id' => 637640,//регион - москва
             'params[201]' => 1060,//тип объявления - сдам
