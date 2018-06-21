@@ -67,6 +67,7 @@ class Sender implements SenderInterface
         ];
 
 	    /** @TODO add user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36 */
+	    /** @TODO use cookie to prevent blocking */
 
         $ch = curl_init($url);
 	    curl_setopt_array($ch, $options);
