@@ -58,10 +58,27 @@ class Sender implements SenderInterface
 
 	    $profilerStartTime = microtime(1);
 
-	    $ch = curl_init();
-	    curl_setopt($ch, CURLOPT_URL, $url);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    $options = [
+            CURLOPT_RETURNTRANSFER => true,   // return web page
+            //CURLOPT_HEADER         => true,  // don't return headers
+            //CURLOPT_USERAGENT      => "test", // name of client
+            //CURLOPT_CONNECTTIMEOUT => 5,    // time-out on connect
+            //CURLOPT_TIMEOUT        => 5,    // time-out on response
+        ];
+
+        $ch = curl_init($url);
+	    curl_setopt_array($ch, $options);
 	    $result = curl_exec($ch);
+	    $info = curl_getinfo($ch);
+	    if($info['http_code'] != 200)
+        {
+            $redirectMessage = $info['http_code'] == 302 ? 'Redirect to '.$info['redirect_url'].'. Are we blocked?' : '';
+            $message = 'Server reply with non-200 status: '.$info['http_code'].'.'.$redirectMessage.' Trying to get response from: '.$url;
+            throw new \Exception($message);
+        }
+	    $error = curl_error($ch);
+
+	    curl_close($ch);
 
 	    $requestDuration = (microtime(1) - $profilerStartTime) * 1000;
 	    $this->logger->debug("Request takes $requestDuration milliseconds");
