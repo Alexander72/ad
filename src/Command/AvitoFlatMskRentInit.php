@@ -115,7 +115,7 @@ class AvitoFlatMskRentInit extends Command
                 }
                 catch(\Exception $e)
                 {
-                    $this->logger->alert($e->getMessage());
+                    $this->logger->warning($e->getMessage());
                     continue;
                 }
 
