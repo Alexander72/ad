@@ -70,6 +70,7 @@ class Sender implements SenderInterface
 	 */
     public function send(string $url): string
     {
+    	/** @TODO there can be different non blocked rps for different URIs */
 	    $this->requestDelayer->wait(self::class);
 
 	    $this->logger->debug("Load data from url: ".self::HOST."$url");
