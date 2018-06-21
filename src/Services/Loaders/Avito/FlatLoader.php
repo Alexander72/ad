@@ -43,6 +43,7 @@ class FlatLoader extends AbstractLoader
         $this->apiParser->setParams($this->getParams());
         $apiData = $this->apiParser->parse($response);
 
+        /** @TODO in this part could be blocking problems. Process it. */
         // load data using html parsing
         $this->setParams(['flat' => $apiData]);
 
