@@ -50,6 +50,7 @@ class FlatHtmlParser extends AbstractParser
     {
 	    $published = trim($published);
         preg_match('/^№ \d+, размещено (.*)$/', $published, $matches);
+        /** @TODO process undefined index 1 */
         return $this->dateParser->parse($matches[1]);
     }
 }
