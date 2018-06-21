@@ -45,11 +45,12 @@ class FlatLoader extends AbstractLoader
 
         /** @TODO in this part could be blocking problems. Process it. */
         // load data using html parsing
-        $this->setParams(['flat' => $apiData]);
+        /*$this->setParams(['flat' => $apiData]);
 
         $url = $this->getUrl();
         $response = $this->sender->send($url);
-        $data = $this->parser->parse($response);
+        $data = $this->parser->parse($response);*/
+        $data = [];
 
         return array_merge($apiData, $data);
     }
