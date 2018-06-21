@@ -13,6 +13,7 @@ use App\Interfaces\Loaders\SenderInterface;
 use App\Interfaces\Parsers\ParserInterface;
 use App\Services\Loaders\AbstractLoader;
 use App\Services\Loaders\Avito\UrlParameters\FlatsUrlGenerator;
+use Psr\Log\LoggerInterface;
 
 class FlatsLoader extends AbstractLoader
 {
@@ -20,6 +21,11 @@ class FlatsLoader extends AbstractLoader
      * @var FlatsUrlGenerator
      */
     protected $urlGenerator;
+
+	/**
+	 * @var LoggerInterface
+	 */
+    protected $logger;
 
     /**
      * FlatsLoader constructor.
@@ -30,11 +36,13 @@ class FlatsLoader extends AbstractLoader
     public function __construct(
         SenderInterface $sender,
         ParserInterface $parser,
-        FlatsUrlGenerator $urlGenerator
+        FlatsUrlGenerator $urlGenerator,
+		LoggerInterface $logger
     ) {
         parent::__construct($sender, $parser);
 
         $this->urlGenerator = $urlGenerator;
+        $this->logger = $logger;
     }
 
     /**
@@ -44,7 +52,16 @@ class FlatsLoader extends AbstractLoader
     {
         foreach($this->urlGenerator->getUrl() as $url)
         {
-            $response = $this->sender->send($url);
+        	try
+	        {
+		        $response = $this->sender->send($url);
+	        }
+	        catch(\Exception $exception)
+	        {
+	        	$this->logger->warning('Failed to load flats list: '.$exception->getMessage());
+	        	continue;
+	        }
+
             $this->parser->setParams($this->getParams());
             try
             {
