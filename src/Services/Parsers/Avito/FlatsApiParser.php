@@ -23,7 +23,7 @@ class FlatsApiParser extends AbstractParser
 		$flats = json_decode($flats, 1);
 		if(!isset($flats['coords']))
         {
-            throw new ParseException("Avito api format has changed. The 'coords' key does not exists. Presented keys: ".implode(', ', array_keys($flats)));
+            throw new ParseException("Avito api format has changed. The 'coords' key does not exists. Json decoced response is: ".var_export($flats, 1));
         }
 
         $flats = $flats['coords'];
