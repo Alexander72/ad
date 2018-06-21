@@ -35,6 +35,7 @@ class AdCacheTest extends TestCase
 	public function testPush()
 	{
 		$cache = new AdCache();
+		$cache->setIsTestMode(true);
 		$cache->put($this->flat1);
 		$this->assertTrue(true);
 

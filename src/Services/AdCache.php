@@ -13,10 +13,13 @@ use App\Services\Repositories\AdRepository;
 
 class AdCache
 {
+    const TEST_MODE_PREFIX = 'test_';
 	/**
 	 * @var \Redis
 	 */
 	protected $redisConnect;
+
+	protected $isTestMode = false;
 
 	/**
 	 * AdCache constructor.
@@ -26,6 +29,25 @@ class AdCache
 		$this->redisConnect = new \Redis();
 		$this->redisConnect->connect($_ENV['REDIS_HOST'], $_ENV['REDIS_PORT']);
 	}
+
+    /**
+     * @param bool $isTestMode
+     * @return $this
+     */
+    public function setIsTestMode(bool $isTestMode = false): self
+    {
+        $this->isTestMode = $isTestMode;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTestMode(): bool
+    {
+        return $this->isTestMode;
+    }
 
 	/**
 	 * Put ad to cache
@@ -110,7 +132,8 @@ class AdCache
 	 */
 	protected function getKey($type, $id): string
 	{
-		return AdRepository::INDEX.'_'.$type.'_'.$id;
+	    $prefix = $this->isTestMode() ? self::TEST_MODE_PREFIX : '';
+		return $prefix.AdRepository::INDEX.'_'.$type.'_'.$id;
 	}
 
 	/**
@@ -122,4 +145,13 @@ class AdCache
 	{
 		return sha1(json_encode($ad->toEsArray()));
 	}
+
+    public function __destruct()
+    {
+        if($this->isTestMode())
+        {
+            $this->redisConnect->delete($this->redisConnect->keys(self::TEST_MODE_PREFIX.'*'));
+        }
+    }
+
 }
