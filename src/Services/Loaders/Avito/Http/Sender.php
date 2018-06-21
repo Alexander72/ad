@@ -60,13 +60,13 @@ class Sender implements SenderInterface
 
 	    $options = [
             CURLOPT_RETURNTRANSFER => true,   // return web page
+            CURLOPT_HTTPHEADER => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
             //CURLOPT_HEADER         => true,  // don't return headers
             //CURLOPT_USERAGENT      => "test", // name of client
             //CURLOPT_CONNECTTIMEOUT => 5,    // time-out on connect
             //CURLOPT_TIMEOUT        => 5,    // time-out on response
         ];
 
-	    /** @TODO add user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36 */
 	    /** @TODO use cookie to prevent blocking */
 
         $ch = curl_init($url);
