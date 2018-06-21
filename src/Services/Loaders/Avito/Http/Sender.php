@@ -11,6 +11,8 @@ namespace App\Services\Loaders\Avito\Http;
 use App\Interfaces\Loaders\SenderInterface;
 use App\Services\Loaders\RequestDelayer;
 use App\Traits\ParameterizableTrait;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Psr\Log\LoggerInterface;
 
 class Sender implements SenderInterface
@@ -20,7 +22,9 @@ class Sender implements SenderInterface
     /**
      * Avito base url
      */
-    const BASE_URL = 'https://www.avito.ru';
+    const HOST = 'www.avito.ru';
+
+    const PROTOCOL = 'https';
 
 	/**
 	 * @var LoggerInterface
@@ -32,6 +36,11 @@ class Sender implements SenderInterface
      */
     protected $requestDelayer;
 
+	/**
+	 * @var Client
+	 */
+    protected $client;
+
     /**
      * Sender constructor.
      *
@@ -42,50 +51,60 @@ class Sender implements SenderInterface
 	) {
 		$this->logger = $logger;
 		$this->requestDelayer = RequestDelayer::getDelayer();
+
+		$stack = \GuzzleHttp\HandlerStack::create();
+		$stack->push($this->getProfiler());
+		$this->client = new Client([
+			'base_uri' => self::PROTOCOL.'://'.self::HOST,
+			'cookies' => true,
+			'handler' => $stack,
+			'allow_redirects' => false,
+			//'debug' => true,
+		]);
 	}
 
 	/**
-     * @param $url
-     * @return string
-     */
+	 * @param string $url
+	 * @return string
+	 * @throws \Exception
+	 */
     public function send(string $url): string
     {
-        $url = self::BASE_URL . $url;
-
 	    $this->requestDelayer->wait(self::class);
 
-	    $this->logger->debug("Load data from url: $url");
+	    $this->logger->debug("Load data from url: ".self::HOST."$url");
 
-	    $profilerStartTime = microtime(1);
+	    $request = new Request('GET', $url, [
+		    'Host' => self::HOST,
+		    'User-Agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0',
+		    'Connection' => 'close',
+	    ]);
 
-	    $options = [
-            CURLOPT_RETURNTRANSFER => true,   // return web page
-            CURLOPT_HTTPHEADER => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
-            //CURLOPT_HEADER         => true,  // don't return headers
-            //CURLOPT_USERAGENT      => "test", // name of client
-            //CURLOPT_CONNECTTIMEOUT => 5,    // time-out on connect
-            //CURLOPT_TIMEOUT        => 5,    // time-out on response
-        ];
+	    $response = $this->client->send($request);
 
-	    /** @TODO use cookie to prevent blocking */
+	    if($response->getStatusCode() != 200)
+	    {
+		    $location = $response->getHeader('location')[0] ?? '< unable to get location >';
+		    $redirect = in_array($response->getStatusCode(), [301, 302]) ? ' Are we blocked? Redirect url: ' . $location : '';
+		    $message = 'Response from ' . self::PROTOCOL . '://' . self::HOST . $request->getUri() . ' returns with non 200 code: ' . $response->getStatusCode() . $redirect;
+		    throw new \Exception($message);
+	    }
 
-        $ch = curl_init($url);
-	    curl_setopt_array($ch, $options);
-	    $result = curl_exec($ch);
-	    $info = curl_getinfo($ch);
-	    if($info['http_code'] != 200)
-        {
-            $redirectMessage = $info['http_code'] == 302 ? 'Redirect to '.$info['redirect_url'].'. Are we blocked?' : '';
-            $message = 'Server reply with non-200 status: '.$info['http_code'].'.'.$redirectMessage.' Trying to get response from: '.$url;
-            throw new \Exception($message);
-        }
-	    $error = curl_error($ch);
-
-	    curl_close($ch);
-
-	    $requestDuration = (microtime(1) - $profilerStartTime) * 1000;
-	    $this->logger->debug("Request takes $requestDuration milliseconds");
+	    $result = $response->getBody();
 
         return $result;
     }
+
+	protected function getProfiler()
+	{
+		return function(callable $handler) {
+			return function(\Psr\Http\Message\RequestInterface $request, array $options) use ($handler) {
+				//echo 'Start request at '.microtime(1)."\n";
+				return $handler($request, $options)->then(function(\Psr\Http\Message\ResponseInterface $response) {
+					//echo 'End request at '.microtime(1)."\n";
+					return $response;
+				});
+			};
+		};
+	}
 }
