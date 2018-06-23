@@ -349,7 +349,7 @@ class Flat extends AbstractAd
 		catch(LoadException $e)
 		{
 			/** @TODO create specific exception */
-			throw new \Exception('Cannot load ad due to: ');
+			throw new \Exception('Cannot load ad due to: '.$e->getMessage());
 		}
 		$this->fromArray($loadedData);
 
