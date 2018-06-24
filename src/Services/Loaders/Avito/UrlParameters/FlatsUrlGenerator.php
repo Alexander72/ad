@@ -12,10 +12,10 @@ use Psr\Log\LoggerInterface;
 
 class FlatsUrlGenerator
 {
-    const UP = 55.872297;
-    const LEFT = 37.459958;
-    const DOWN = 55.638917;
-    const RIGHT = 37.825253;
+    const UP = 55.931175;
+    const LEFT = 37.260572;
+    const DOWN = 55.492520;
+    const RIGHT = 37.934858;
 
     const WINDOW_SIZE = 0.018410973322936286;
 
